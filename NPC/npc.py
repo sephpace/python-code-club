@@ -1,4 +1,5 @@
 
+import random
 
 """
 --- Dialog Options ---
@@ -93,11 +94,11 @@ def option_212():
 
 
 def option_213():
-    print("*Bartamaeus casts a spell on you that launches you up 600 feet into the air*\n*You frantically flap your arms while plummeting to the earth*\nFeet before the ground to begin to ascend in the air*\n\nCongratulations!  You have successfully learned to fly!")
+    print("*Bartamaeus casts a spell on you that launches you up 600 feet into the air*\n*You frantically flap your arms while plummeting to the earth*\n*Feet before the ground to begin to ascend in the air*\n\nCongratulations!  You have successfully learned to fly!")
 
 
 def option_22():
-    print("*You wait, standing in the same spot, staring at Bartamaeus with a blank expression for the rest of your life.*")
+    print("*You wait, standing in the same spot, staring at Bartamaeus with a blank expression for the rest of your life.*\n\nCongratulations!  You died!")
 
 
 def option_23():
@@ -120,6 +121,37 @@ def option_231():
 def option_3():
     print("*Bartamaeus retrieves two italian sub-sandwiches from his rucksack and offers one to you*\n\nYou spend the afternoon sharing stories and eating sandwiches.  What a wonderful day!")
 
+
+# -- Option Tree 4 --
+
+
+def option_4():
+    print("*Bartamaeus reaches into his pockets and retrieves two coins clasped in each hand*\n\nVery well, this is all I have.  But I must warn you!\nOne of these coins is blessed to bring its possessor great power!  But the other is cursed, to bring its possessor a great cursing.  Which will you choose?")
+    answer = get_answer(["I choose the one in your right hand.", "I choose the one in your left hand.", "I will not choose."])
+    if answer == 1 or answer == 2:
+        option_4_random()
+    else:
+        option_43()
+
+
+def option_4_random():
+    chance = random.randint(0,1)
+    if chance == 1:
+        option_4_good()
+    else:
+        option_4_bad()
+
+
+def option_4_good():
+    print("As you grab the coin, you feel a sudden surge of energy course through your body.  Suddenly you are filled with immeasurable power!\n\nCongratulations!  You have become ruler of the universe!")
+
+
+def option_4_bad():
+    print("As you grab the coin, you feel your pants drop to your ankles.  Everyone you know suddenly appears and starts laughing at you.\n\nCongratulations!  You are the laughing stock of the town!")
+
+
+def option_43():
+    print("Very well.  I bid you a safe journey hence.")
 
 
 """
@@ -164,5 +196,4 @@ elif answer == 2:
 elif answer == 3:
     option_3()
 else:
-    # option_4()
-    pass
+    option_4()
