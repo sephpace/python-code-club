@@ -113,6 +113,15 @@ def option_23():
 def option_231():
     print("Well, I am sure that a wizard is wiser than I.  You need no wisdom from me.  I bid you farewell!")
 
+
+# -- Option Tree 3 --
+
+
+def option_3():
+    print("*Bartamaeus retrieves two italian sub-sandwiches from his rucksack and offers one to you*\n\nYou spend the afternoon sharing stories and eating sandwiches.  What a wonderful day!")
+
+
+
 """
 --- Other functions ---
 """
@@ -153,8 +162,7 @@ if answer == 1:
 elif answer == 2:
     option_2()
 elif answer == 3:
-    # option_3()
-    pass
+    option_3()
 else:
     # option_4()
     pass
