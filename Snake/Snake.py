@@ -1,6 +1,6 @@
 
 from pygame import draw
-from Snake import GUI
+from GUI import GUI
 
 
 class Snake:

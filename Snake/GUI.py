@@ -1,13 +1,14 @@
 
 import pygame
 
-SCREEN_SIZE = 500
-GRID_SIZE = SCREEN_SIZE / 100
 
 class GUI:
-    def __init__(self, screen_width, screen_height):
+    SCREEN_SIZE = 500
+    GRID_SIZE = SCREEN_SIZE / 100
+
+    def __init__(self):
         pygame.init()
-        self.__display = pygame.display.set_mode((screen_width, screen_height))
+        self.__display = pygame.display.set_mode((self.SCREEN_SIZE, self.SCREEN_SIZE))
 
         pygame.display.update()  # Implement double-buffering, etc.
 
