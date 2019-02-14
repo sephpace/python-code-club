@@ -1,6 +1,8 @@
 
 import pygame
 
+SCREEN_SIZE = 500
+GRID_SIZE = SCREEN_SIZE / 100
 
 class GUI:
     def __init__(self, screen_width, screen_height):
