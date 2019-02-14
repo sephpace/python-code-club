@@ -1,5 +1,5 @@
 
-from GUI import GUI
+from Snake.GUI import GUI
 
 
 gui = GUI(500, 500)
