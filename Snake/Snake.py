@@ -175,6 +175,6 @@ def run():
 
 
 def get_rand_pos():
-    return random.randint(2, SCREEN_SIZE // SNAKE_SIZE - 1) * SNAKE_SIZE, random.randint(2, SCREEN_SIZE // SNAKE_SIZE - 1) * SNAKE_SIZE
+    return random.randint(2, SCREEN_SIZE // SNAKE_SIZE - 2) * SNAKE_SIZE, random.randint(2, SCREEN_SIZE // SNAKE_SIZE - 2) * SNAKE_SIZE
 
 menu()
