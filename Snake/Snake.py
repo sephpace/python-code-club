@@ -154,12 +154,12 @@ def run():
         # Check for collisions with the apple
         if body_positions[0] in apple_positions:
             # Move the apple
-            apple_positions[apple_positions.index(body_positions[0])] = get_rand_pos();
+            apple_positions[apple_positions.index(body_positions[0])] = get_rand_pos()
 
-            #Add a new body segment to the snake
+            # Add a new body segment to the snake
             body_positions.append(body_positions[-1])
 
-            #Update the score
+            # Update the score
             score += 1
             score_text = font.render(str(score), False, (255, 255, 255))
 
@@ -175,7 +175,7 @@ def run():
         for pos in body_positions:
             pygame.draw.rect(screen, (0, 255, 0), (pos[0], pos[1], SNAKE_SIZE, SNAKE_SIZE))
 
-        # Draw the scorebar
+        # Draw the score bar
         pygame.Surface.blit(screen, score_bar_text, (15, 10))
         pygame.Surface.blit(screen, score_text, (85, 10))
 
