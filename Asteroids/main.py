@@ -5,21 +5,38 @@ import pygame
 
 # --- Classes ---
 class Player:
-    def __init__(self, pos, rot=math.pi / 2, color=(255, 255, 255)):
-        self.set_pos(pos)
+    def __init__(self, pos, speed=0, rot=(3 * math.pi / 2), color=(255, 255, 255)):
+        self.__points = ()
+        self.__pos = pos
+        self.__speed = speed
         self.__rot = rot
         self.__color = color
-        self.__points = ()
+        self.__update_pos()
+
+    def get_pos(self): return self.__pos
+
+    def get_rot(self): return self.__rot
 
     def set_pos(self, pos):
-        self.__points = ((pos[0], pos[1] - 5), (pos[0] + 5, pos[1] + 10), (pos[0], pos[1] + 5), (pos[0] - 5, pos[1] + 10), (pos[0], pos[1] - 5))
+        self.__pos = pos
+        self.__update_pos()
 
-    def set_rot(self, rad):
-        pass
+    def set_speed(self, speed):
+        self.__speed = speed
+
+    def set_rot(self, radians):
+        self.__rot = radians
+        self.__update_pos()
 
     def draw(self, surface):
         pygame.draw.polygon(surface, self.__color, self.__points)
 
+    def __update_pos(self):
+        self.__points = ((self.__pos[0] + int(5 * math.cos(self.__rot)), self.__pos[1] + int(5 * math.sin(self.__rot))),  # Front
+                         (self.__pos[0] - int(10 * math.cos(self.__rot + math.pi / 6)), self.__pos[1] - int(10 * math.sin(self.__rot + math.pi / 6))),  # Right
+                         (self.__pos[0] - int(5 * math.cos(self.__rot)), self.__pos[1] - int(5 * math.sin(self.__rot))),  # Back
+                         (self.__pos[0] - int(10 * math.cos(self.__rot - math.pi / 6)), self.__pos[1] - int(10 * math.sin(self.__rot - math.pi / 6))),  # Left
+                         (self.__pos[0] + int(5 * math.cos(self.__rot)), self.__pos[1] + int(5 * math.sin(self.__rot))))  # Front
 
 # --- Functions ---
 def start():
