@@ -83,7 +83,6 @@ def game_over():
             break
         timer += 1
 
-
     screen.fill((0, 0, 0))
 
 
@@ -99,6 +98,11 @@ def run():
     """Runs the main game logic"""
     direction = UP
     apple_positions = [get_rand_pos(), get_rand_pos(), get_rand_pos(), get_rand_pos()]
+    score = 0
+    global font
+    font = pygame.font.SysFont("Verdana", 20)
+    score_bar_text = font.render("Score: ", False, (255, 255, 255))
+    score_text = font.render(str(score), False, (255, 255, 255))
 
     # --- Main Loop ---
     while True:
@@ -155,6 +159,10 @@ def run():
             #Add a new body segment to the snake
             body_positions.append(body_positions[-1])
 
+            #Update the score
+            score += 1
+            score_text = font.render(str(score), False, (255, 255, 255))
+
         # Draw the apples
         for pos in apple_positions:
             pygame.draw.rect(screen, (255, 0, 0), (pos[0], pos[1], SNAKE_SIZE, SNAKE_SIZE))
@@ -167,11 +175,15 @@ def run():
         for pos in body_positions:
             pygame.draw.rect(screen, (0, 255, 0), (pos[0], pos[1], SNAKE_SIZE, SNAKE_SIZE))
 
+        # Draw the scorebar
+        pygame.Surface.blit(screen, score_bar_text, (15, 10))
+        pygame.Surface.blit(screen, score_text, (85, 10))
+
         # Update the screen
         pygame.display.update()
 
         # Set the speed of each frame
-        clock.tick(5)
+        clock.tick(10)
 
 
 def get_rand_pos():
