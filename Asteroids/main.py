@@ -12,6 +12,8 @@ class Player:
         self.__rot = rot
         self.__color = color
         self.__update_pos()
+        self.__go_left = False
+        self.__go_right = False
 
     def get_pos(self): return self.__pos
 
@@ -28,8 +30,18 @@ class Player:
         self.__rot = radians
         self.__update_pos()
 
+    def set_left(self, left): self.__go_left = left
+
+    def set_right(self, right): self.__go_right = right
+
     def draw(self, surface):
         pygame.draw.polygon(surface, self.__color, self.__points)
+
+    def handle(self):
+        if self.__go_left:
+            self.set_rot(self.get_rot() - math.pi / 20)
+        if self.__go_right:
+            self.set_rot(self.get_rot() + math.pi / 20)
 
     def __update_pos(self):
         self.__points = ((self.__pos[0] + int(5 * math.cos(self.__rot)), self.__pos[1] + int(5 * math.sin(self.__rot))),  # Front
@@ -37,6 +49,7 @@ class Player:
                          (self.__pos[0] - int(5 * math.cos(self.__rot)), self.__pos[1] - int(5 * math.sin(self.__rot))),  # Back
                          (self.__pos[0] - int(10 * math.cos(self.__rot - math.pi / 6)), self.__pos[1] - int(10 * math.sin(self.__rot - math.pi / 6))),  # Left
                          (self.__pos[0] + int(5 * math.cos(self.__rot)), self.__pos[1] + int(5 * math.sin(self.__rot))))  # Front
+
 
 # --- Functions ---
 def start():
@@ -48,9 +61,27 @@ def run():
     while True:
         # Handle events
         for event in pygame.event.get():
+            # If a key is pressed
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    player.set_left(True)
+                if event.key == pygame.K_RIGHT:
+                    player.set_right(True)
+
+            # If a key is released
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    player.set_left(False)
+                if event.key == pygame.K_RIGHT:
+                    player.set_right(False)
+
+            # Quit event
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+
+        # Handle the player's movements
+        player.handle()
 
         # Clear the screen
         screen.fill((0, 0, 0))
