@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/MonsterFighters" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FortuneTeller" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Temperature" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Asteroids" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
