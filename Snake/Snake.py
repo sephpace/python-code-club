@@ -73,8 +73,9 @@ def game_over():
     pygame.Surface.blit(screen, game_over_text, (100, 170))
     pygame.display.update()
 
-    # Handle quit event and delay for a little bit
-    timer = 0
+    milliseconds = 0  # The amt of milliseconds delayed
+
+    # Handle quit event and delay for a little bitß
     while True:
         # Event handler
         for event in pygame.event.get():
@@ -82,9 +83,12 @@ def game_over():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-        if timer >= 800000:
+
+        milliseconds += pygame.time.delay(1)
+
+        if milliseconds >= 2000:
             break
-        timer += 1
+
 
     # Clear the screen
     screen.fill((0, 0, 0))
