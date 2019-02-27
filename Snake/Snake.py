@@ -4,6 +4,7 @@ import random
 
 from Player import Player
 from Food import Food
+from Border import Border
 
 
 pygame.init()
@@ -21,14 +22,7 @@ screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
 clock = pygame.time.Clock()
 player = Player((SCREEN_SIZE // 2, SCREEN_SIZE // 2), (0, 255, 0))
 food_pieces = []
-
-# The border around the screen
-border = []
-for i in range(0, SCREEN_SIZE, SNAKE_SIZE):
-    border.append((i, 0))
-    border.append((0, i))
-    border.append((SCREEN_SIZE - SNAKE_SIZE, i))
-    border.append((i, SCREEN_SIZE - SNAKE_SIZE))
+border = Border(SCREEN_SIZE, SNAKE_SIZE)
 
 # Menu words
 pygame.font.init()
@@ -89,7 +83,6 @@ def game_over():
         if milliseconds >= 2000:
             break
 
-
     # Clear the screen
     screen.fill((0, 0, 0))
 
@@ -140,7 +133,7 @@ def run():
         player.move()
 
         # Check for collisions with self and border
-        if player.is_colliding(border + player.get_body_positions()[1:]):
+        if player.is_colliding(border.get_positions() + player.get_body_positions()[1:]):
             game_over()
             break
 
@@ -162,8 +155,7 @@ def run():
             food.draw(screen)
 
         # Draw the border
-        for pos in border:
-            pygame.draw.rect(screen, (0, 0, 255), (pos[0], pos[1], SNAKE_SIZE, SNAKE_SIZE))
+        border.draw(screen)
 
         # Draw the snake
         player.draw(screen)
