@@ -1,5 +1,5 @@
 
-from pygame import Surface, draw
+from pygame import draw
 
 
 UP = 0

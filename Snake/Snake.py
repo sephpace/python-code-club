@@ -3,6 +3,7 @@ import pygame
 import random
 
 from Player import Player
+from Food import Food
 
 
 pygame.init()
@@ -19,7 +20,7 @@ DOWN = 3
 screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
 clock = pygame.time.Clock()
 player = Player((SCREEN_SIZE // 2, SCREEN_SIZE // 2), (0, 255, 0))
-apple_positions = []
+food_pieces = []
 
 # The border around the screen
 border = []
@@ -96,7 +97,8 @@ def start():
 
 def run():
     """Runs the main game logic"""
-    apple_positions = [get_rand_pos(), get_rand_pos(), get_rand_pos(), get_rand_pos()]
+    global food_pieces
+    food_pieces = [Food(get_rand_pos()), Food(get_rand_pos()), Food(get_rand_pos()), Food(get_rand_pos())]
     score = 0
     global font
     font = pygame.font.SysFont("Verdana", 20)
@@ -138,21 +140,22 @@ def run():
             game_over()
             break
 
-        # Check for collisions with the apple
-        if player.is_colliding(apple_positions):
-            # Move the apple
-            apple_positions[apple_positions.index(player.get_body_positions()[0])] = get_rand_pos()
+        # Check for collisions with the food pieces
+        for food in food_pieces:
+            if player.is_colliding([food.get_pos()]):
+                # Move the food
+                food.set_pos(get_rand_pos())
 
-            # Add a new body segment to the snake
-            player.add_segment()
+                # Add a new body segment to the snake
+                player.add_segment()
 
-            # Update the score
-            score += 1
-            score_text = font.render(str(score), False, (255, 255, 255))
+                # Update the score
+                score += 1
+                score_text = font.render(str(score), False, (255, 255, 255))
 
-        # Draw the apples
-        for pos in apple_positions:
-            pygame.draw.rect(screen, (255, 0, 0), (pos[0], pos[1], SNAKE_SIZE, SNAKE_SIZE))
+        # Draw the food
+        for food in food_pieces:
+            food.draw(screen)
 
         # Draw the border
         for pos in border:
@@ -174,5 +177,6 @@ def run():
 
 def get_rand_pos():
     return random.randint(2, SCREEN_SIZE // SNAKE_SIZE - 2) * SNAKE_SIZE, random.randint(2, SCREEN_SIZE // SNAKE_SIZE - 2) * SNAKE_SIZE
+
 
 menu()
