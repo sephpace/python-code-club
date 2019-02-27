@@ -2,6 +2,9 @@
 import pygame
 import random
 
+from Player import Player
+
+
 pygame.init()
 
 # Constants
@@ -15,8 +18,7 @@ DOWN = 3
 # Other variables and objects
 screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
 clock = pygame.time.Clock()
-start_pos = (SCREEN_SIZE // 2, SCREEN_SIZE // 2)
-body_positions = []
+player = Player((SCREEN_SIZE // 2, SCREEN_SIZE // 2), (0, 255, 0))
 apple_positions = []
 
 # The border around the screen
@@ -83,20 +85,17 @@ def game_over():
             break
         timer += 1
 
+    # Clear the screen
     screen.fill((0, 0, 0))
 
 
 def start():
     """Sets up and starts the game"""
-    global body_positions
-    body_positions = [start_pos, (start_pos[0], start_pos[1] + SNAKE_SIZE), (start_pos[0], start_pos[1] + SNAKE_SIZE * 2),
-     (start_pos[0], start_pos[1] + SNAKE_SIZE * 3)]
     run()
 
 
 def run():
     """Runs the main game logic"""
-    direction = UP
     apple_positions = [get_rand_pos(), get_rand_pos(), get_rand_pos(), get_rand_pos()]
     score = 0
     global font
@@ -112,17 +111,17 @@ def run():
             if event.type == pygame.KEYDOWN:
                 key = event.key
                 if key == pygame.K_UP:
-                    if direction != DOWN:
-                        direction = UP
+                    if player.get_direction() != DOWN:
+                        player.set_direction(UP)
                 if key == pygame.K_LEFT:
-                    if direction != RIGHT:
-                        direction = LEFT
+                    if player.get_direction() != RIGHT:
+                        player.set_direction(LEFT)
                 if key == pygame.K_DOWN:
-                    if direction != UP:
-                        direction = DOWN
+                    if player.get_direction() != UP:
+                        player.set_direction(DOWN)
                 if key == pygame.K_RIGHT:
-                    if direction != LEFT:
-                        direction = RIGHT
+                    if player.get_direction() != LEFT:
+                        player.set_direction(RIGHT)
             # Quit event
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -132,32 +131,20 @@ def run():
         screen.fill((0, 0, 0))
 
         # Move the snake
-        for i in range(len(body_positions) - 1, -1, -1):
-            # Update the positions
-            if i == 0:
-                if direction == UP:
-                    body_positions[i] = (body_positions[i][0], body_positions[i][1] - SNAKE_SIZE)
-                elif direction == LEFT:
-                    body_positions[i] = (body_positions[i][0] - SNAKE_SIZE, body_positions[i][1])
-                elif direction == DOWN:
-                    body_positions[i] = (body_positions[i][0], body_positions[i][1] + SNAKE_SIZE)
-                elif direction == RIGHT:
-                    body_positions[i] = (body_positions[i][0] + SNAKE_SIZE, body_positions[i][1])
-            else:
-                body_positions[i] = body_positions[i - 1]
+        player.move()
 
         # Check for collisions with self and border
-        if body_positions[0] in body_positions[1:] or body_positions[0] in border:
+        if player.is_colliding(border + player.get_body_positions()[1:]):
             game_over()
             break
 
         # Check for collisions with the apple
-        if body_positions[0] in apple_positions:
+        if player.is_colliding(apple_positions):
             # Move the apple
-            apple_positions[apple_positions.index(body_positions[0])] = get_rand_pos()
+            apple_positions[apple_positions.index(player.get_body_positions()[0])] = get_rand_pos()
 
             # Add a new body segment to the snake
-            body_positions.append(body_positions[-1])
+            player.add_segment()
 
             # Update the score
             score += 1
@@ -172,8 +159,7 @@ def run():
             pygame.draw.rect(screen, (0, 0, 255), (pos[0], pos[1], SNAKE_SIZE, SNAKE_SIZE))
 
         # Draw the snake
-        for pos in body_positions:
-            pygame.draw.rect(screen, (0, 255, 0), (pos[0], pos[1], SNAKE_SIZE, SNAKE_SIZE))
+        player.draw(screen)
 
         # Draw the score bar
         pygame.Surface.blit(screen, score_bar_text, (15, 10))
