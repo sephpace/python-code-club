@@ -44,10 +44,13 @@ class GameLoop:
 
     def start(self):
         """Start the game loop"""
-        self.__gui.show_menu()  # Run the menu first
-        self.run()
+        while True:
+            game_mode = self.__gui.show_menu()  # Run the menu first
+            self.run(game_mode)
+            self.__gui.game_over()
+            self.setup()
 
-    def run(self):
+    def run(self, game_mode):
         """Run the logic of the loop"""
         while True:
             # Event handler
@@ -80,7 +83,8 @@ class GameLoop:
 
             # Check for collisions with self and border
             if self.__player.is_colliding(self.__border.get_positions() + self.__player.get_body_positions()[1:]):
-                self.restart()
+                # Stop the game loop
+                break
 
             # Check for collisions with the food pieces
             for food in self.__foods:
@@ -105,9 +109,3 @@ class GameLoop:
     
     def get_rand_pos(self):
         return random.randint(2, SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE, random.randint(2,SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE
-
-    def restart(self):
-        """Restarts the game from the menu"""
-        self.__gui.game_over()
-        self.__gui.show_menu()
-        self.setup()

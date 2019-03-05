@@ -21,7 +21,7 @@ class ScoreBar:
     def draw(self, surface):
         """Draws the scorebar to the given surface"""
         Surface.blit(surface, self.__score_bar_text, (15, 10))
-        Surface.blit(surface, self.__score_text, (85, 10))
+        Surface.blit(surface, self.__score_text, (25 + self.__font.size("Score")[0], 10))
 
     def get_score(self):
         """Returns the score"""
