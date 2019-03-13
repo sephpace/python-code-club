@@ -1,5 +1,6 @@
 
 import pygame
+from Player import Player
 
 
 class GUI:
@@ -7,6 +8,7 @@ class GUI:
 
     # Member variables
     __screen = None  # The Pygame display window
+    __size = 0       # The size of the screen
 
     def __init__(self, size):
         """Constructor"""
@@ -53,7 +55,65 @@ class GUI:
         self.clear()
         self.update()
 
-    def show_menu(self):
+    def customization_menu(self):
+        """Displays the customization menu"""
+        # Set up the menu options
+        font = pygame.font.SysFont('Verdana', 30)
+
+        # The name of the player
+        name = ""
+        max_letter_amount = 15
+
+        # Event loop
+        draw_menu = True
+        while draw_menu:
+            # Clear the display
+            self.clear()
+
+            # Draw the menu
+            text_width, text_height = font.size("Player Name")
+            pygame.Surface.blit(self.__screen, font.render("Player Name", False, (255, 255, 255)), ((self.__size // 2) - (text_width // 2), (self.__size // 2) - text_height))
+            text_width, text_height = font.size(name)
+            pygame.Surface.blit(self.__screen, font.render(name, False, (255, 255, 255)), ((self.__size // 2) - (text_width // 2), (self.__size // 2) + text_height))
+
+            # Update the display
+            self.update()
+
+            # Event handler
+            for event in pygame.event.get():
+                # Key events
+                if event.type == pygame.KEYDOWN:
+                    key = event.key
+
+                    # Print the letters of the name
+                    # Regular lower-cased letters
+                    if pygame.K_a <= key <= pygame.K_z:
+                        if len(name) < max_letter_amount:
+                            name += pygame.key.name(key)
+                    # Spaces
+                    if key == pygame.K_SPACE:
+                        if len(name) < max_letter_amount:
+                            name += " "
+
+                    # Allow backspacing
+                    if key == pygame.K_BACKSPACE:
+                        name = name[:-1]
+
+                    # Join or host the game
+                    if key == pygame.K_RETURN:
+                        draw_menu = False
+
+                # Quit event
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+
+        # Clear the menu from the screen
+        self.clear()
+        self.update()
+        return name
+
+    def main_menu(self):
         """Displays the game title and menu"""
         # Draw the title
         font = pygame.font.SysFont('Verdana', 80)
@@ -65,9 +125,6 @@ class GUI:
         font = pygame.font.SysFont('Verdana', 30)
         options = ["Single Player", "Multiplayer Host", "Multiplayer Join"]
         selected = 0
-
-        # The game mode that is selected
-        game_mode = None
 
         # Event loop
         draw_menu = True
@@ -88,9 +145,8 @@ class GUI:
                 # Key events
                 if event.type == pygame.KEYDOWN:
                     key = event.key
-                    # Start game with selected option
-                    if key == pygame.K_RETURN:
-                        game_mode = selected
+                    # Select the current option
+                    if key == pygame.K_RETURN or key == pygame.K_SPACE:
                         draw_menu = False
 
                     # Select different options
@@ -109,7 +165,23 @@ class GUI:
         # Clear the menu from the screen
         self.clear()
         self.update()
-        return game_mode
+        return selected
+
+    def multiplayer_menu(self, game_mode, client_name):
+        players = []
+
+        draw_menu = True
+
+        if game_mode == 1:  # Hosting (Master)
+            # TODO: Add the first player to the game
+            pass
+        elif game_mode == 2:  # Joining (Slave)
+            pass
+
+        # TODO: Get the playerdata from the server
+
+        while draw_menu:
+            pass
 
     def update(self):
         """Updates the display"""
