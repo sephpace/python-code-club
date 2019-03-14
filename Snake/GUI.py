@@ -21,15 +21,28 @@ class GUI:
 
     def draw(self, objects):
         """Draws all of the given objects to the screen"""
-        for obj in objects:
-            obj.draw(self.__screen)
+        try:
+            for obj in objects:
+                obj.draw(self.__screen)
+        except TypeError:
+            objects.draw(self.__screen)
 
-    def game_over(self):
+    def game_over(self, winning_color):
         """Displays the game over screen then goes badk to the title"""
         self.clear()
+        color_string = ''
+        if winning_color == (255, 0, 0):
+            color_string = 'RED'
+        elif winning_color == (0, 255, 0):
+            color_string = 'GREEN'
+        elif winning_color == (0, 0, 255):
+            color_string = 'BLUE'
+        elif winning_color == (255, 255, 0):
+            color_string = 'YELLOW'
         font = pygame.font.SysFont('Verdana', 50)
-        game_over_text = font.render("Game Over", False, (255, 255, 255))
-        pygame.Surface.blit(self.__screen, game_over_text, (100, 170))
+        game_over_text = font.render(f'{color_string} WINS', False, winning_color)
+        text_width, text_height = font.size(f'{color_string} WINS')
+        pygame.Surface.blit(self.__screen, game_over_text, ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50))
         self.update()
 
         milliseconds = 0  # The amt of milliseconds delayed

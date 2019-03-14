@@ -16,13 +16,31 @@ class Player:
     __color = ()           # The color of the snake
     __size = 0             # The size of each segment in the snake
     __direction = 0        # The direction the snake is moving
+    __alive = True         # A boolean that determines if the snake is alive or not
 
     def __init__(self, start_pos, color, size=10, direction=UP):
         """Constructor"""
-        self.__body_positions = [start_pos,
-                                (start_pos[0], start_pos[1] + size),
-                                (start_pos[0], start_pos[1] + size * 2),
-                                (start_pos[0], start_pos[1] + size * 3)]
+        if direction == UP:
+            self.__body_positions = [start_pos,
+                                    (start_pos[0], start_pos[1] + size),
+                                    (start_pos[0], start_pos[1] + size * 2),
+                                    (start_pos[0], start_pos[1] + size * 3)]
+        elif direction == LEFT:
+            self.__body_positions = [start_pos,
+                                     (start_pos[0] + size, start_pos[1]),
+                                     (start_pos[0] + size * 2, start_pos[1]),
+                                     (start_pos[0] + size * 3, start_pos[1])]
+        elif direction == DOWN:
+            self.__body_positions = [start_pos,
+                                     (start_pos[0], start_pos[1] - size),
+                                     (start_pos[0], start_pos[1] - size * 2),
+                                     (start_pos[0], start_pos[1] - size * 3)]
+        elif direction == RIGHT:
+            self.__body_positions = [start_pos,
+                                     (start_pos[0] - size, start_pos[1]),
+                                     (start_pos[0] - size * 2, start_pos[1]),
+                                     (start_pos[0] - size * 3, start_pos[1])]
+
         self.__color = color
         self.__size = size
         self.__direction = direction
@@ -30,6 +48,9 @@ class Player:
     def add_segment(self):
         """Adds a new segment to the end of the snake"""
         self.__body_positions.append(self.__body_positions[-1])
+
+    def is_alive(self):
+        return self.__alive
 
     def is_colliding(self, positions):
         """Returns True if the snake's head collides with any of the given positions"""
@@ -58,6 +79,9 @@ class Player:
     def get_size(self):
         """Returns the size of the snake"""
         return self.__size
+
+    def kill(self):
+        self.__alive = False
 
     def move(self):
         """Moves the snake in whatever direction it's facing"""

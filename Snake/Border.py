@@ -11,7 +11,7 @@ class Border:
     __color = ()             # The color of the border
     __square_positions = []  # Positions of each square in the border
 
-    def __init__(self, screen_size, cell_size, color=(0, 0, 255)):
+    def __init__(self, screen_size, cell_size, color=(127, 127, 127)):
         """Constructor"""
         self.__screen_size = screen_size
         self.__cell_size = cell_size
