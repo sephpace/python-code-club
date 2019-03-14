@@ -1,5 +1,5 @@
 
-from pygame import draw
+from pygame import draw, K_UP, K_LEFT, K_DOWN, K_RIGHT, K_w, K_a, K_s, K_d
 
 
 UP = 0
@@ -17,8 +17,12 @@ class Player:
     __size = 0             # The size of each segment in the snake
     __direction = 0        # The direction the snake is moving
     __alive = True         # A boolean that determines if the snake is alive or not
+    up_button = None
+    left_button = None
+    down_button = None
+    right_button = None
 
-    def __init__(self, start_pos, color, size=10, direction=UP):
+    def __init__(self, start_pos, color, size=10, direction=UP, controls='ARROW_KEYS'):
         """Constructor"""
         if direction == UP:
             self.__body_positions = [start_pos,
@@ -44,6 +48,17 @@ class Player:
         self.__color = color
         self.__size = size
         self.__direction = direction
+
+        if controls == 'ARROW_KEYS':
+            self.up_button = K_UP
+            self.left_button = K_LEFT
+            self.down_button = K_DOWN
+            self.right_button = K_RIGHT
+        elif controls == 'WASD':
+            self.up_button = K_w
+            self.left_button = K_a
+            self.down_button = K_s
+            self.right_button = K_d
 
     def add_segment(self):
         """Adds a new segment to the end of the snake"""

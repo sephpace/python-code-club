@@ -38,11 +38,11 @@ class GameLoop:
 
     def setup(self):
         """Setup everything in the game to get it ready to start"""
-        self.__player1 = Player((100, 100), (0, 255, 0), direction=RIGHT)
-        self.__player2 = Player((SCREEN_SIZE - 100, 100), (255, 0, 0), direction = DOWN)
-        self.__player3 = Player((100, SCREEN_SIZE - 100), (0, 0, 255), direction = UP)
-        self.__player4 = Player((SCREEN_SIZE - 100, SCREEN_SIZE - 100), (255, 255, 0), direction=LEFT)
-        self.__players = [self.__player1, self.__player2, self.__player3, self.__player4]
+        player1 = Player((100, 100), (0, 255, 0), direction=RIGHT, controls='ARROW_KEYS')
+        player2 = Player((SCREEN_SIZE - 100, 100), (255, 0, 0), direction=DOWN, controls='WASD')
+        player3 = Player((100, SCREEN_SIZE - 100), (0, 0, 255), direction=UP, controls='ARROW_KEYS')
+        player4 = Player((SCREEN_SIZE - 100, SCREEN_SIZE - 100), (255, 255, 0), direction=LEFT, controls='WASD')
+        self.__players = [player1, player2, player3, player4]
         self.__foods = [Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos())]
         self.__border = Border(SCREEN_SIZE, GRID_SIZE)
 
@@ -54,80 +54,33 @@ class GameLoop:
     def run(self):
         """Run the logic of the loop"""
         while True:
+            # Clear the screen
+            self.__gui.clear()
+
             # Event handler
             for event in pygame.event.get():
                 # Key events
                 if event.type == pygame.KEYDOWN:
                     key = event.key
-
-                    # --- Player 1 ---
-                    if self.__player1.is_alive():
-                        if key == pygame.K_UP:
-                            if self.__player1.get_direction() != DOWN:
-                                self.__player1.set_direction(UP)
-                        if key == pygame.K_LEFT:
-                            if self.__player1.get_direction() != RIGHT:
-                                self.__player1.set_direction(LEFT)
-                        if key == pygame.K_DOWN:
-                            if self.__player1.get_direction() != UP:
-                                self.__player1.set_direction(DOWN)
-                        if key == pygame.K_RIGHT:
-                            if self.__player1.get_direction() != LEFT:
-                                self.__player1.set_direction(RIGHT)
-
-                    # --- Player 2 ---
-                    if self.__player2.is_alive():
-                        if key == pygame.K_w:
-                            if self.__player2.get_direction() != DOWN:
-                                self.__player2.set_direction(UP)
-                        if key == pygame.K_a:
-                            if self.__player2.get_direction() != RIGHT:
-                                self.__player2.set_direction(LEFT)
-                        if key == pygame.K_s:
-                            if self.__player2.get_direction() != UP:
-                                self.__player2.set_direction(DOWN)
-                        if key == pygame.K_d:
-                            if self.__player2.get_direction() != LEFT:
-                                self.__player2.set_direction(RIGHT)
-
-                    # --- Player 3 ---
-                    if self.__player3.is_alive():
-                        if key == pygame.K_UP:
-                            if self.__player3.get_direction() != DOWN:
-                                self.__player3.set_direction(UP)
-                        if key == pygame.K_LEFT:
-                            if self.__player3.get_direction() != RIGHT:
-                                self.__player3.set_direction(LEFT)
-                        if key == pygame.K_DOWN:
-                            if self.__player3.get_direction() != UP:
-                                self.__player3.set_direction(DOWN)
-                        if key == pygame.K_RIGHT:
-                            if self.__player3.get_direction() != LEFT:
-                                self.__player3.set_direction(RIGHT)
-
-                    # --- Player 4 ---
-                    if self.__player4.is_alive():
-                        if key == pygame.K_w:
-                            if self.__player4.get_direction() != DOWN:
-                                self.__player4.set_direction(UP)
-                        if key == pygame.K_a:
-                            if self.__player4.get_direction() != RIGHT:
-                                self.__player4.set_direction(LEFT)
-                        if key == pygame.K_s:
-                            if self.__player4.get_direction() != UP:
-                                self.__player4.set_direction(DOWN)
-                        if key == pygame.K_d:
-                            if self.__player4.get_direction() != LEFT:
-                                self.__player4.set_direction(RIGHT)
-
+                    for player in self.__players:
+                        if player.is_alive():
+                            if key == player.up_button:
+                                if player.get_direction() != DOWN:
+                                    player.set_direction(UP)
+                            if key == player.left_button:
+                                if player.get_direction() != RIGHT:
+                                    player.set_direction(LEFT)
+                            if key == player.down_button:
+                                if player.get_direction() != UP:
+                                    player.set_direction(DOWN)
+                            if key == player.right_button:
+                                if player.get_direction() != LEFT:
+                                    player.set_direction(RIGHT)
 
                 # Quit event
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
-
-            # Clear the screen
-            self.__gui.clear()
 
             for player in self.__players:
                 if player.is_alive():
