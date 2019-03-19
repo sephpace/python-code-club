@@ -23,6 +23,7 @@ class GameLoop:
     # Member variables
     __gui = None        # The game's Graphical User Interface
     __clock = None      # The game clock used to set the fps of the game
+    __joysticks = None
     __player1 = None    # The player 1 object
     __player2 = None    # The player 2 object
     __player3 = None    # The player 3 object
@@ -38,11 +39,19 @@ class GameLoop:
 
     def setup(self):
         """Setup everything in the game to get it ready to start"""
+        pygame.joystick.init()
+        self.__joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+        self.__players = []
         player1 = Player((100, 100), (0, 255, 0), direction=RIGHT, controls='ARROW_KEYS')
+        self.__players.append(player1)
         player2 = Player((SCREEN_SIZE - 100, 100), (255, 0, 0), direction=DOWN, controls='WASD')
-        player3 = Player((100, SCREEN_SIZE - 100), (0, 0, 255), direction=UP, controls='ARROW_KEYS')
-        player4 = Player((SCREEN_SIZE - 100, SCREEN_SIZE - 100), (255, 255, 0), direction=LEFT, controls='WASD')
-        self.__players = [player1, player2, player3, player4]
+        self.__players.append(player2)
+        if len(self.__joysticks) >= 1:
+            player3 = Player((100, SCREEN_SIZE - 100), (0, 0, 255), direction=UP, controls='JOYSTICK', joystick=self.__joysticks[0])
+            self.__players.append(player3)
+        if len(self.__joysticks) >= 2:
+            player4 = Player((SCREEN_SIZE - 100, SCREEN_SIZE - 100), (255, 255, 0), direction=LEFT, controls='JOYSTICK', joystick=self.__joysticks[1])
+            self.__players.append(player4)
         self.__foods = [Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos())]
         self.__border = Border(SCREEN_SIZE, GRID_SIZE)
 
@@ -61,9 +70,9 @@ class GameLoop:
             for event in pygame.event.get():
                 # Key events
                 if event.type == pygame.KEYDOWN:
-                    key = event.key
                     for player in self.__players:
                         if player.is_alive():
+                            key = event.key
                             if key == player.up_button:
                                 if player.get_direction() != DOWN:
                                     player.set_direction(UP)
@@ -76,6 +85,25 @@ class GameLoop:
                             if key == player.right_button:
                                 if player.get_direction() != LEFT:
                                     player.set_direction(RIGHT)
+
+                if event.type == pygame.JOYHATMOTION:
+                    for player in self.__players:
+                        if player.is_alive():
+                            if player.get_joystick() is not None:
+                                if event.joy == player.get_joystick().get_id():
+                                    x_axis, y_axis = event.value
+                                    if y_axis == 1:
+                                        if player.get_direction() != DOWN:
+                                            player.set_direction(UP)
+                                    if x_axis == -1:
+                                        if player.get_direction() != RIGHT:
+                                            player.set_direction(LEFT)
+                                    if y_axis == -1:
+                                        if player.get_direction() != UP:
+                                            player.set_direction(DOWN)
+                                    if x_axis == 1:
+                                        if player.get_direction() != LEFT:
+                                            player.set_direction(RIGHT)
 
                 # Quit event
                 if event.type == pygame.QUIT:

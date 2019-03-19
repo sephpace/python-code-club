@@ -1,5 +1,5 @@
 
-from pygame import draw, K_UP, K_LEFT, K_DOWN, K_RIGHT, K_w, K_a, K_s, K_d
+from pygame import quit, draw, K_UP, K_LEFT, K_DOWN, K_RIGHT, K_w, K_a, K_s, K_d
 
 
 UP = 0
@@ -17,12 +17,13 @@ class Player:
     __size = 0             # The size of each segment in the snake
     __direction = 0        # The direction the snake is moving
     __alive = True         # A boolean that determines if the snake is alive or not
+    __joystick = None
     up_button = None
     left_button = None
     down_button = None
     right_button = None
 
-    def __init__(self, start_pos, color, size=10, direction=UP, controls='ARROW_KEYS'):
+    def __init__(self, start_pos, color, size=10, direction=UP, controls='ARROW_KEYS', joystick=None):
         """Constructor"""
         if direction == UP:
             self.__body_positions = [start_pos,
@@ -59,6 +60,13 @@ class Player:
             self.left_button = K_a
             self.down_button = K_s
             self.right_button = K_d
+        elif controls == "JOYSTICK":
+            if joystick is not None:
+                joystick.init()
+                self.__joystick = joystick
+            else:
+                quit()
+                exit("No controller found!")
 
     def add_segment(self):
         """Adds a new segment to the end of the snake"""
@@ -90,6 +98,10 @@ class Player:
     def get_direction(self):
         """Returns the direction that the snake is moving"""
         return self.__direction
+
+    def get_joystick(self):
+        """Returns the pygame joystick object associated with this player and None if there are no joysticks associated with this player"""
+        return self.__joystick
 
     def get_size(self):
         """Returns the size of the snake"""

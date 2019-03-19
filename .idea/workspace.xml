@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e7d36532-ab5b-4751-a2b0-245e6f7ecd35" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/PythonCodeClub.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PythonCodeClub.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Asteroids/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Asteroids/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Snake/GameLoop.py" beforeDir="false" afterPath="$PROJECT_DIR$/Snake/GameLoop.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Snake/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Snake/Player.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,10 +15,19 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Asteroids/main.py">
+        <entry file="file://$PROJECT_DIR$/Snake/GameLoop.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="43" column="123" selection-start-line="43" selection-start-column="123" selection-end-line="43" selection-end-column="123" />
+            <state relative-caret-position="224">
+              <caret line="100" column="50" selection-start-line="100" selection-start-column="50" selection-end-line="100" selection-end-column="50" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Snake/Player.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="78">
+              <caret line="99" selection-start-line="99" selection-end-line="99" />
             </state>
           </provider>
         </entry>
@@ -37,6 +46,7 @@
       <find>apple_pos</find>
       <find>blit</find>
       <find>pos</find>
+      <find>pygame.in</find>
     </findStrings>
     <replaceStrings>
       <replace>self.__pos</replace>
@@ -60,6 +70,8 @@
         <option value="$PROJECT_DIR$/Snake/__init__.py" />
         <option value="$PROJECT_DIR$/Snake/Snake.py" />
         <option value="$PROJECT_DIR$/Asteroids/main.py" />
+        <option value="$PROJECT_DIR$/Snake/Player.py" />
+        <option value="$PROJECT_DIR$/Snake/GameLoop.py" />
       </list>
     </option>
   </component>
@@ -74,6 +86,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -89,17 +102,21 @@
             <path>
               <item name="PythonCodeClub" type="b2602c69:ProjectViewProjectNode" />
               <item name="PythonCodeClub" type="462c0819:PsiDirectoryNode" />
+              <item name="Snake" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="PythonCodeClub" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PythonCodeClub" type="462c0819:PsiDirectoryNode" />
               <item name="Temperature" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Asteroids/main.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Snake/main.py" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -118,7 +135,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Asteroids">
+  <component name="RunManager" selected="Python.Snake">
     <configuration name="Asteroids" type="PythonConfigurationType" factoryName="Python">
       <module name="PythonCodeClub" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -236,7 +253,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Snake/Snake.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Snake/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -269,13 +286,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.114583336" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3289689" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3289689" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39934534" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -308,6 +326,17 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout-to-restore>
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Snake/GameLoop.py</url>
+          <line>93</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/NPC/DialogMenu.py" />
     <entry file="file://$PROJECT_DIR$/NPC/MenuOption.py" />
@@ -327,7 +356,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Snake/main.py" />
-    <entry file="file://$PROJECT_DIR$/Snake/GUI.py" />
     <entry file="file://$PROJECT_DIR$/Snake/direction.py" />
     <entry file="file://$PROJECT_DIR$/Snake/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
@@ -339,20 +367,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Snake/Snake.py">
+    <entry file="file://$PROJECT_DIR$/Snake/Snake.py" />
+    <entry file="file://$PROJECT_DIR$/Asteroids/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="33">
-          <caret line="177" column="25" selection-start-line="177" selection-start-column="25" selection-end-line="177" selection-end-column="25" />
-          <folding>
-            <element signature="e#1#14#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="206">
+          <caret line="41" column="27" lean-forward="true" selection-start-line="41" selection-start-column="27" selection-end-line="41" selection-end-column="27" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Asteroids/main.py">
+    <entry file="file://$PROJECT_DIR$/Snake/GUI.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/_sitebuiltins.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="43" column="123" selection-start-line="43" selection-start-column="123" selection-end-line="43" selection-end-column="123" />
+        <state relative-caret-position="357">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Snake/Player.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="78">
+          <caret line="99" selection-start-line="99" selection-end-line="99" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Snake/GameLoop.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="100" column="50" selection-start-line="100" selection-start-column="50" selection-end-line="100" selection-end-column="50" />
         </state>
       </provider>
     </entry>
