@@ -1,5 +1,6 @@
 
 import pygame
+from Menu import MainMenu, MultiplayerMenu
 
 
 class GUI:
@@ -67,32 +68,34 @@ class GUI:
 
     def show_menu(self):
         """Displays the game title and menu"""
-        # Draw the title
-        font = pygame.font.SysFont('Verdana', 80)
-        title = font.render("Snake", False, (0, 255, 0))
-        font = pygame.font.SysFont('Verdana', 30)
-        subtitle = font.render("Press enter to start", False, (255, 255, 255))
-        pygame.Surface.blit(self.__screen, title, (120, 150))
-        pygame.Surface.blit(self.__screen, subtitle, (100, 240))
-
-        # Update the display
-        self.update()
-
-        # Event loop
-        draw_menu = True
-        while draw_menu:
-
-            # Event handler
-            for event in pygame.event.get():
-                # Key events
-                if event.type == pygame.KEYDOWN:
-                    key = event.key
-                    if key == pygame.K_RETURN:
-                        draw_menu = False
-                # Quit event
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+        main_menu = MainMenu(self.__screen)
+        main_menu.handle()
+        # # Draw the title
+        # font = pygame.font.SysFont('Verdana', 80)
+        # title = font.render("Snake", False, (0, 255, 0))
+        # font = pygame.font.SysFont('Verdana', 30)
+        # subtitle = font.render("Press enter to start", False, (255, 255, 255))
+        # pygame.Surface.blit(self.__screen, title, (120, 150))
+        # pygame.Surface.blit(self.__screen, subtitle, (100, 240))
+        #
+        # # Update the display
+        # self.update()
+        #
+        # # Event loop
+        # draw_menu = True
+        # while draw_menu:
+        #
+        #     # Event handler
+        #     for event in pygame.event.get():
+        #         # Key events
+        #         if event.type == pygame.KEYDOWN:
+        #             key = event.key
+        #             if key == pygame.K_RETURN:
+        #                 draw_menu = False
+        #         # Quit event
+        #         if event.type == pygame.QUIT:
+        #             pygame.quit()
+        #             exit()
 
         # Clear the menu from the screen
         self.clear()
