@@ -3,7 +3,6 @@ import pygame
 import random
 
 from GUI import GUI
-from Player import Player
 from Food import Food
 from Border import Border
 
@@ -23,10 +22,7 @@ class GameLoop:
     # Member variables
     __gui = None        # The game's Graphical User Interface
     __clock = None      # The game clock used to set the fps of the game
-    __joysticks = None
-    __player1 = None    # The player 1 object
-    __player2 = None    # The player 2 object
-    __player3 = None    # The player 3 object
+    __joysticks = None  # A list of all the joysticks currently connected to the computer
     __players = None    # A list of all the players
     __foods = None      # A list of food objects
     __border = None     # The border object
@@ -35,34 +31,23 @@ class GameLoop:
         """Constructor"""
         self.__gui = GUI(SCREEN_SIZE)
         self.__clock = pygame.time.Clock()
-        self.setup()
 
     def setup(self):
         """Setup everything in the game to get it ready to start"""
-        pygame.joystick.init()
-        self.__joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
-        self.__players = []
-        player1 = Player((100, 100), (0, 255, 0), direction=RIGHT, controls='ARROW_KEYS')
-        self.__players.append(player1)
-        player2 = Player((SCREEN_SIZE - 100, 100), (255, 0, 0), direction=DOWN, controls='WASD')
-        self.__players.append(player2)
-        if len(self.__joysticks) >= 1:
-            player3 = Player((100, SCREEN_SIZE - 100), (0, 0, 255), direction=UP, controls='JOYSTICK', joystick=self.__joysticks[0])
-            self.__players.append(player3)
-        if len(self.__joysticks) >= 2:
-            player4 = Player((SCREEN_SIZE - 100, SCREEN_SIZE - 100), (255, 255, 0), direction=LEFT, controls='JOYSTICK', joystick=self.__joysticks[1])
-            self.__players.append(player4)
         self.__foods = [Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos())]
         self.__border = Border(SCREEN_SIZE, GRID_SIZE)
 
     def start(self):
         """Start the game loop"""
-        self.__gui.show_menu()  # Run the menu first
-        self.run()
-
-    def run(self):
-        """Run the logic of the loop"""
         while True:
+            self.setup()
+            self.__players, game_mode = self.__gui.show_menu()  # Run the menu first
+            self.run(game_mode)
+
+    def run(self, game_mode):
+        """Run the logic of the loop"""
+        running = True
+        while running:
             # Clear the screen
             self.__gui.clear()
 
@@ -151,15 +136,17 @@ class GameLoop:
             # Set the speed of each frame
             self.__clock.tick(10)
 
+            # Check for singleplayer game over
+            if game_mode == 'singleplayer':
+                if len(self.__players) == 0:
+                    self.__gui.game_over((255, 255, 255), game_mode)
+                    running = False
+
             # Check for a winner
-            if len(self.__players) == 1:
-                self.__gui.game_over(self.__players[0].get_color())
-                self.restart()
+            if game_mode == 'multiplayer':
+                if len(self.__players) == 1:
+                    self.__gui.game_over(self.__players[0].get_color(), game_mode)
+                    running = False
     
     def get_rand_pos(self):
         return random.randint(2, SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE, random.randint(2,SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE
-
-    def restart(self):
-        """Restarts the game from the menu"""
-        self.__gui.show_menu()
-        self.setup()

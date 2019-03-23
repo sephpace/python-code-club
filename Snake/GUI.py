@@ -1,6 +1,6 @@
 
 import pygame
-from Menu import MainMenu, MultiplayerMenu
+from Menu import MainMenu, MultiplayerMenu, CustomizationMenu
 
 
 class GUI:
@@ -28,22 +28,28 @@ class GUI:
         except TypeError:
             objects.draw(self.__screen)
 
-    def game_over(self, winning_color):
+    def game_over(self, winning_color, game_mode):
         """Displays the game over screen then goes badk to the title"""
         self.clear()
-        color_string = ''
-        if winning_color == (255, 0, 0):
-            color_string = 'RED'
-        elif winning_color == (0, 255, 0):
-            color_string = 'GREEN'
-        elif winning_color == (0, 0, 255):
-            color_string = 'BLUE'
-        elif winning_color == (255, 255, 0):
-            color_string = 'YELLOW'
+
         font = pygame.font.SysFont('Verdana', 50)
-        game_over_text = font.render(f'{color_string} WINS', False, winning_color)
-        text_width, text_height = font.size(f'{color_string} WINS')
-        pygame.Surface.blit(self.__screen, game_over_text, ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50))
+        if game_mode == 'singleplayer':
+            game_over_text = font.render('GAME OVER', False, winning_color)
+            text_width, text_height = font.size('GAME OVER')
+            pygame.Surface.blit(self.__screen, game_over_text, ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50))
+        elif game_mode == 'multiplayer':
+            color_string = ''
+            if winning_color == (255, 0, 0):
+                color_string = 'RED'
+            elif winning_color == (0, 255, 0):
+                color_string = 'GREEN'
+            elif winning_color == (0, 0, 255):
+                color_string = 'BLUE'
+            elif winning_color == (255, 255, 0):
+                color_string = 'YELLOW'
+            game_over_text = font.render(f'{color_string} WINS', False, winning_color)
+            text_width, text_height = font.size(f'{color_string} WINS')
+            pygame.Surface.blit(self.__screen, game_over_text, ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50))
         self.update()
 
         milliseconds = 0  # The amt of milliseconds delayed
@@ -68,38 +74,16 @@ class GUI:
 
     def show_menu(self):
         """Displays the game title and menu"""
-        main_menu = MainMenu(self.__screen)
-        main_menu.handle()
-        # # Draw the title
-        # font = pygame.font.SysFont('Verdana', 80)
-        # title = font.render("Snake", False, (0, 255, 0))
-        # font = pygame.font.SysFont('Verdana', 30)
-        # subtitle = font.render("Press enter to start", False, (255, 255, 255))
-        # pygame.Surface.blit(self.__screen, title, (120, 150))
-        # pygame.Surface.blit(self.__screen, subtitle, (100, 240))
-        #
-        # # Update the display
-        # self.update()
-        #
-        # # Event loop
-        # draw_menu = True
-        # while draw_menu:
-        #
-        #     # Event handler
-        #     for event in pygame.event.get():
-        #         # Key events
-        #         if event.type == pygame.KEYDOWN:
-        #             key = event.key
-        #             if key == pygame.K_RETURN:
-        #                 draw_menu = False
-        #         # Quit event
-        #         if event.type == pygame.QUIT:
-        #             pygame.quit()
-        #             exit()
+        # Start the menu(s)
+        menu = MainMenu(self.__screen)
+        menu.handle()
 
         # Clear the menu from the screen
         self.clear()
         self.update()
+
+        # Return the data
+        return menu.get_players(), menu.get_game_mode()
 
     def update(self):
         """Updates the display"""
