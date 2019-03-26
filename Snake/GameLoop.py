@@ -15,6 +15,8 @@ LEFT = 1
 RIGHT = 2
 DOWN = 3
 
+# TODO: Add scoreboard back for single player
+
 
 class GameLoop:
     """The main loop of the game.  Calculates all of the non-visual logic"""

@@ -43,16 +43,18 @@ class Menu:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEMOTION:
                     for option in self.options:
-                        if option.contains(event.pos):
-                            option.set_color((0, 255, 0))
-                        else:
-                            option.set_color((255, 255, 255))
+                        if type(option) != ArrowBar:
+                            if option.contains(event.pos):
+                                option.set_color((0, 255, 0))
+                            else:
+                                option.set_color((255, 255, 255))
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         for option in self.options:
-                            if option.contains(event.pos):
-                                option.select()
+                            if type(option) != ArrowBar:
+                                if option.contains(event.pos):
+                                    option.select()
 
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -106,19 +108,6 @@ class MainMenu(Menu):
         """
         Logic for when the multiplayer option is selected.
         """
-        # TODO: Move this temporary code into the Customization Menu somewhere
-        # pygame.joystick.init()
-        # joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
-        # player1 = Player((100, 100), (0, 255, 0), direction=RIGHT, controls='ARROW_KEYS')
-        # self.__players.append(player1)
-        # player2 = Player((self.surface.get_width - 100, 100), (255, 0, 0), direction=DOWN, controls='WASD')
-        # self.__players.append(player2)
-        # if len(joysticks) >= 1:
-        #     player3 = Player((100, self.surface.get_width - 100), (0, 0, 255), direction=UP, controls='JOYSTICK', joystick=self.__joysticks[0])
-        #     self.__players.append(player3)
-        # if len(joysticks) >= 2:
-        #     player4 = Player((self.surface.get_width - 100, self.surface.get_width - 100), (255, 255, 0), direction=LEFT, controls='JOYSTICK', joystick=self.__joysticks[1])
-        #     self.__players.append(player4)
         multiplayer_menu = MultiplayerMenu(self.surface)
         multiplayer_menu.handle()
         self.__players = multiplayer_menu.get_players()
@@ -191,11 +180,112 @@ class CustomizationMenu(Menu):
     """
     Allows players to customize their snake color and set their controls
     """
+    __players = None
+    __player_count = None
+
+    __colors = [(0, 255, 0), (255, 0, 0), (0, 0, 255), (255, 255, 0)]
+    __color_surfaces = {}
+    __controls = ['ARROW_KEYS', 'WASD', 'JOYSTICK']
+    __control_surfaces = {}
+
+    __color_bars = []
+    __control_bars = []
+
     def __init__(self, surface, player_count):
         super(CustomizationMenu, self).__init__(surface)
 
-        print(player_count)
+        self.__players = []
+        self.__player_count = player_count
 
+        # Populate color_surfaces
+        for color in self.__colors:
+            color_surface = pygame.Surface((60, 40))
+            pygame.draw.rect(color_surface, color, (0, 0, color_surface.get_width(), color_surface.get_height()))
+            self.__color_surfaces[color] = color_surface
+
+        # Populate control_surfaces
+        self.__control_surfaces['ARROW_KEYS'] = pygame.image.load('arrowkeys.png')
+        self.__control_surfaces['WASD'] = pygame.image.load('wasd.png')
+        self.__control_surfaces['JOYSTICK'] = pygame.image.load('controller.png')
+
+        font = pygame.font.SysFont('Verdana', 40)
+        for i in range(player_count):
+            # Add the player name for each player
+            width, height = font.size(f'Player {i + 1}')
+            player_name = font.render(f'Player {i + 1}', False, (255, 255, 255))
+            draw_x = 10
+            draw_y = (self.surface.get_height() // 2) - (height * player_count) + (height * i)
+            pygame.Surface.blit(self.surface, player_name, (draw_x, draw_y))
+
+            # Add the color bar for each player
+            color_bar = ArrowBar((draw_x + width + 10, draw_y), self.__colors, self.__color_surfaces)
+            self.options.append(color_bar)
+            for arrow in color_bar.get_arrows():
+                self.options.append(arrow)
+            self.__color_bars.append(color_bar)
+
+            # Add the control bar for each player
+            control_bar = ArrowBar((draw_x + width + color_bar.get_width() + 20, draw_y), self.__controls, self.__control_surfaces)
+            self.options.append(control_bar)
+            for arrow in control_bar.get_arrows():
+                self.options.append(arrow)
+            self.__control_bars.append(control_bar)
+
+        # Add the start option
+        option_start = MenuOption("START", (400, 450), function=self.start)
+        self.options.append(option_start)
+
+    def start(self):
+        """
+        Creates the player data and starts the game
+        """
+        pygame.joystick.init()
+        joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+        current_joystick_index = 0
+
+        # Player 1
+        joystick = None
+        if self.__control_bars[0].get() == 'JOYSTICK':
+            joystick = joysticks[current_joystick_index]
+            current_joystick_index += 1
+        player1 = Player((100, 100), self.__color_bars[0].get(), direction=RIGHT, controls=self.__control_bars[0].get(), joystick=joystick)
+        self.__players.append(player1)
+
+        # Player 2
+        if self.__player_count >= 2:
+            joystick = None
+            if self.__control_bars[1].get() == 'JOYSTICK':
+                joystick = joysticks[current_joystick_index]
+                current_joystick_index += 1
+            player2 = Player((self.surface.get_width() - 100, 100), self.__color_bars[1].get(), direction=DOWN, controls=self.__control_bars[0].get(), joystick=joystick)
+            self.__players.append(player2)
+
+        # Player 3
+        if self.__player_count >= 3:
+            joystick = None
+            if self.__control_bars[2].get() == 'JOYSTICK':
+                joystick = joysticks[current_joystick_index]
+                current_joystick_index += 1
+            player3 = Player((100, self.surface.get_width() - 100), self.__color_bars[2].get(), direction=UP, controls=self.__control_bars[2].get(), joystick=joystick)
+            self.__players.append(player3)
+
+        # Player 4
+        if self.__player_count == 4:
+            joystick = None
+            if self.__control_bars[3].get() == 'JOYSTICK':
+                joystick = joysticks[current_joystick_index]
+                current_joystick_index += 1
+            player4 = Player((self.surface.get_width - 100, self.surface.get_width() - 100), self.__color_bars[3].get(), direction=LEFT, controls=self.__control_bars[3].get(), joystick=joystick)
+            self.__players.append(player4)
+
+        # Start the game
+        self.running = False
+
+    def get_players(self):
+        """
+        :return:  The players selected by the menu
+        """
+        return self.__players
 
 
 class MenuOption:
@@ -207,32 +297,29 @@ class MenuOption:
     __option_font = None
     __function = None
     __size = ()
-    __surface = None
+    surface = None
 
-    def __init__(self, text, pos=None, option_font=None, function=None):
+    def __init__(self, text, pos=None, function=None):
         """
         Constructor.
 
         :param text:         The text displayed for the menu option
         :param pos:          The position of the menu option on the screen as a tuple of x and y
-        :param option_font:  The pygame font object for the menu option
         """
         self.__text = text
         self.__pos = pos
-        if option_font is not None:
-            self.__option_font = option_font
-        else:
-            self.__option_font = pygame.font.SysFont('Verdana', 30)
+        self.__option_font = pygame.font.SysFont('Verdana', 30)
         self.__function = function
-        self.__size = self.__option_font.size(text)
-        self.__surface = self.__option_font.render(text, False, (255, 255, 255))
+        if text is not None:
+            self.size = self.__option_font.size(text)
+            self.surface = self.__option_font.render(text, False, (255, 255, 255))
 
     def set_color(self, color):
-        self.__surface = self.__option_font.render(self.__text, False, color)
+        self.surface = self.__option_font.render(self.__text, False, color)
 
     def draw(self, surface):
         x, y = self.__pos
-        pygame.Surface.blit(surface, self.__surface, (x, y))
+        pygame.Surface.blit(surface, self.surface, (x, y))
 
     def get_pos(self):
         """
@@ -244,7 +331,7 @@ class MenuOption:
         """
         :return:  The size of the menu option
         """
-        return self.__size
+        return self.size
 
     def set_pos(self, pos):
         """
@@ -261,7 +348,7 @@ class MenuOption:
         """
         x, y = point
         option_x, option_y = self.__pos
-        option_width, option_height = self.__size
+        option_width, option_height = self.size
         if option_x <= x <= option_x + option_width and option_y <= y <= option_y + option_height:
             return True
         return False
@@ -269,3 +356,139 @@ class MenuOption:
     def select(self):
         """Runs the function associated with this menu option"""
         self.__function()
+
+
+class ArrowOption(MenuOption):
+    """
+    A selectable menu option in the shape of an arrow.
+    """
+    __direction = None
+    __color = ()
+
+    def __init__(self, direction, pos=None, function=None):
+        """
+        Constructor.
+
+        :param direction:   The direction the arrow is facing
+        :param pos:         The position of the arrow
+        :param function:    The function associated with this arrow
+        """
+        super(ArrowOption, self).__init__(None, pos, function)
+
+        self.size = (30, 30)
+        self.surface = pygame.Surface(self.size)
+        self.__direction = direction
+        self.set_color((255, 255, 255))
+        self.__value_index = 0
+
+    def __draw_arrow(self):
+        """
+        Draws the Arrow Option onto it's surface
+        """
+        width, height = self.size
+        if self.__direction == UP:
+            pygame.draw.polygon(self.surface, self.__color, ((width // 2, 0), (width, height), (width // 2, height - 10), (0, height), (width // 2, 0)))
+        elif self.__direction == LEFT:
+            pygame.draw.polygon(self.surface, self.__color, ((0, height // 2), (width, 0), (width - 10, height // 2), (width, height), (0, height // 2)))
+        elif self.__direction == DOWN:
+            pygame.draw.polygon(self.surface, self.__color, ((width // 2, height), (0, 0), (width // 2, 10), (width, 0), (width // 2, height)))
+        elif self.__direction == RIGHT:
+            pygame.draw.polygon(self.surface, self.__color, ((width, height // 2), (0, 0), (10, height // 2), (0, height), (width, height // 2)))
+
+    def set_color(self, color):
+        """
+        Sets the color the Arrow Option to the given color.
+
+        :param color:  The color to set the Arrow Option to
+        """
+        self.__color = color
+        self.__draw_arrow()
+
+
+class ArrowBar:
+    """
+    Two arrows options that face opposite directions and change the same value back and forth
+    """
+    __pos = None
+    __values = None
+    __value_index = None
+    __surfaces = None
+    __surface = None
+    __gap = None
+    __orientation = None
+    __left_arrow = None
+    __right_arrow = None
+    __arrows = None
+
+    def __init__(self, pos, values, surfaces, gap=60):
+        """
+        Constructor.
+
+        :param pos:       The position of the arrow bar
+        :param values:    A list of values to be changed back and forth with the arrow bar
+        :param surfaces:  The surfaces that correspond to each value in the list of values
+        :param gap:       The gap between each arrow in the arrow bar
+        """
+        self.__pos = pos
+        self.__values = values
+        self.__value_index = 0
+        self.__surfaces = surfaces
+        self.__surface = surfaces.get(self.__values[self.__value_index])
+        self.__gap = gap
+        self.__arrows = []
+
+        # Create the arrows
+        self.__left_arrow = ArrowOption(LEFT, (pos[0], pos[1] + 5), self.__left)
+        self.__arrows.append(self.__left_arrow)
+
+        self.__right_arrow = ArrowOption(RIGHT, (pos[0] + self.__left_arrow.size[0] + gap + 20, pos[1] + 5), self.__right)
+        self.__arrows.append(self.__right_arrow)
+
+    def __left(self):
+        """
+        Go to the previous value in the list of values associated with this arrow bar.
+        """
+        if self.__value_index > 0:
+            self.__value_index -= 1
+        else:
+            self.__value_index = len(self.__values) - 1
+        self.__surface = self.__surfaces.get(self.__values[self.__value_index])
+
+    def __right(self):
+        """
+        Go to the next value in the list of values associated with this arrow bar.
+        """
+        if self.__value_index < len(self.__values) - 1:
+            self.__value_index += 1
+        else:
+            self.__value_index = 0
+        self.__surface = self.__surfaces.get(self.__values[self.__value_index])
+
+    def draw(self, surface):
+        x = self.__pos[0] + self.__arrows[0].size[0] + 10
+        y = self.__pos[1]
+        pygame.draw.rect(surface, (0, 0, 0), (x, y, self.__surface.get_width(), self.__surface.get_height()))
+        pygame.Surface.blit(surface, self.__surface, (x, y))
+
+    def get(self):
+        """
+        :return: The currently selected value in the value list
+        """
+        return self.__values[self.__value_index]
+
+    def get_arrows(self):
+        """
+        :return:  The arrows associated with this arrow bar
+        """
+        return self.__arrows
+
+    def get_width(self):
+        width = 0
+        for arrow in self.__arrows:
+            width += arrow.size[0]
+        width += self.__surface.get_width()
+        width += 20
+        return width
+
+    def get_height(self):
+        return self.__surface.get_height()
