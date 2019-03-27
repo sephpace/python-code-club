@@ -1,6 +1,6 @@
 
 import pygame
-from Menu import MainMenu, MultiplayerMenu, CustomizationMenu
+from Menu import MainMenu
 
 
 class GUI:
@@ -72,9 +72,6 @@ class GUI:
         # Clear the menu from the screen
         self.clear()
         self.update()
-
-        # Return the data
-        return menu.get_players(), menu.get_game_mode()
 
     def update(self):
         """Updates the display"""
