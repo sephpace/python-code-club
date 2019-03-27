@@ -183,9 +183,11 @@ class CustomizationMenu(Menu):
     __players = None
     __player_count = None
 
+    __joysticks = []
+
     __colors = [(0, 255, 0), (255, 0, 0), (0, 0, 255), (255, 255, 0)]
     __color_surfaces = {}
-    __controls = ['ARROW_KEYS', 'WASD', 'JOYSTICK']
+    __controls = ['ARROW_KEYS', 'WASD']
     __control_surfaces = {}
 
     __color_bars = []
@@ -203,10 +205,20 @@ class CustomizationMenu(Menu):
             pygame.draw.rect(color_surface, color, (0, 0, color_surface.get_width(), color_surface.get_height()))
             self.__color_surfaces[color] = color_surface
 
+        # Setup joysticks
+        pygame.joystick.init()
+        self.__joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+
         # Populate control_surfaces
         self.__control_surfaces['ARROW_KEYS'] = pygame.image.load('arrowkeys.png')
         self.__control_surfaces['WASD'] = pygame.image.load('wasd.png')
-        self.__control_surfaces['JOYSTICK'] = pygame.image.load('controller.png')
+        for joystick in self.__joysticks:
+            controller_image = pygame.image.load('controller.png')
+            font = pygame.font.SysFont('Verdana', 20)
+            controller_number = font.render(str(joystick.get_id() + 1), False, (255, 255, 255))
+            pygame.Surface.blit(controller_image, controller_number, (23, 3))
+            self.__control_surfaces[f'JOYSTICK{joystick.get_id()}'] = controller_image
+            self.__controls.append(f'JOYSTICK{joystick.get_id()}')
 
         font = pygame.font.SysFont('Verdana', 40)
         for i in range(player_count):
@@ -239,43 +251,37 @@ class CustomizationMenu(Menu):
         """
         Creates the player data and starts the game
         """
-        pygame.joystick.init()
-        joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
-        current_joystick_index = 0
+        # TODO: Figure out why the controls aren't being set right
 
         # Player 1
         joystick = None
-        if self.__control_bars[0].get() == 'JOYSTICK':
-            joystick = joysticks[current_joystick_index]
-            current_joystick_index += 1
+        if 'JOYSTICK' in self.__control_bars[0].get():
+            joystick = self.__joysticks[int(self.__control_bars[0].get()[-1])]
         player1 = Player((100, 100), self.__color_bars[0].get(), direction=RIGHT, controls=self.__control_bars[0].get(), joystick=joystick)
         self.__players.append(player1)
 
         # Player 2
         if self.__player_count >= 2:
             joystick = None
-            if self.__control_bars[1].get() == 'JOYSTICK':
-                joystick = joysticks[current_joystick_index]
-                current_joystick_index += 1
-            player2 = Player((self.surface.get_width() - 100, 100), self.__color_bars[1].get(), direction=DOWN, controls=self.__control_bars[0].get(), joystick=joystick)
+            if 'JOYSTICK' in self.__control_bars[1].get():
+                joystick = self.__joysticks[int(self.__control_bars[1].get()[-1])]
+            player2 = Player((self.surface.get_width() - 100, 100), self.__color_bars[1].get(), direction=DOWN, controls=self.__control_bars[1].get(), joystick=joystick)
             self.__players.append(player2)
 
         # Player 3
         if self.__player_count >= 3:
             joystick = None
-            if self.__control_bars[2].get() == 'JOYSTICK':
-                joystick = joysticks[current_joystick_index]
-                current_joystick_index += 1
+            if 'JOYSTICK' in self.__control_bars[2].get():
+                joystick = self.__joysticks[int(self.__control_bars[2].get()[-1])]
             player3 = Player((100, self.surface.get_width() - 100), self.__color_bars[2].get(), direction=UP, controls=self.__control_bars[2].get(), joystick=joystick)
             self.__players.append(player3)
 
         # Player 4
         if self.__player_count == 4:
             joystick = None
-            if self.__control_bars[3].get() == 'JOYSTICK':
-                joystick = joysticks[current_joystick_index]
-                current_joystick_index += 1
-            player4 = Player((self.surface.get_width - 100, self.surface.get_width() - 100), self.__color_bars[3].get(), direction=LEFT, controls=self.__control_bars[3].get(), joystick=joystick)
+            if 'JOYSTICK' in self.__control_bars[3].get():
+                joystick = self.__joysticks[int(self.__control_bars[3].get()[-1])]
+            player4 = Player((self.surface.get_width() - 100, self.surface.get_width() - 100), self.__color_bars[3].get(), direction=LEFT, controls=self.__control_bars[3].get(), joystick=joystick)
             self.__players.append(player4)
 
         # Start the game

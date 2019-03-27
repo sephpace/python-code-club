@@ -12,8 +12,8 @@ GRID_SIZE = 10
 
 UP = 0
 LEFT = 1
-RIGHT = 2
-DOWN = 3
+DOWN = 2
+RIGHT = 3
 
 # TODO: Add scoreboard back for single player
 
@@ -33,6 +33,7 @@ class GameLoop:
         """Constructor"""
         self.__gui = GUI(SCREEN_SIZE)
         self.__clock = pygame.time.Clock()
+        pygame.joystick.init()
 
     def setup(self):
         """Setup everything in the game to get it ready to start"""

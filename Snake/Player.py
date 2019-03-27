@@ -4,8 +4,8 @@ from pygame import quit, draw, K_UP, K_LEFT, K_DOWN, K_RIGHT, K_w, K_a, K_s, K_d
 
 UP = 0
 LEFT = 1
-RIGHT = 2
-DOWN = 3
+DOWN = 2
+RIGHT = 3
 
 
 class Player:
@@ -60,13 +60,9 @@ class Player:
             self.left_button = K_a
             self.down_button = K_s
             self.right_button = K_d
-        elif controls == "JOYSTICK":
-            if joystick is not None:
-                joystick.init()
-                self.__joystick = joystick
-            else:
-                quit()
-                exit("No controller found!")
+        if joystick is not None:
+            joystick.init()
+            self.__joystick = joystick
 
     def add_segment(self):
         """Adds a new segment to the end of the snake"""
