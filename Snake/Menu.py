@@ -185,6 +185,7 @@ class CustomizationMenu(Menu):
 
     __joysticks = []
 
+    # TODO: Add more colors
     __colors = [(0, 255, 0), (255, 0, 0), (0, 0, 255), (255, 255, 0)]
     __color_surfaces = {}
     __controls = ['ARROW_KEYS', 'WASD']
@@ -226,7 +227,7 @@ class CustomizationMenu(Menu):
             width, height = font.size(f'Player {i + 1}')
             player_name = font.render(f'Player {i + 1}', False, (255, 255, 255))
             draw_x = 10
-            draw_y = (self.surface.get_height() // 2) - (height * player_count) + (height * i)
+            draw_y = (self.surface.get_height() // 2) - (height * player_count) + (height * i) + 50
             pygame.Surface.blit(self.surface, player_name, (draw_x, draw_y))
 
             # Add the color bar for each player
@@ -244,15 +245,13 @@ class CustomizationMenu(Menu):
             self.__control_bars.append(control_bar)
 
         # Add the start option
-        option_start = MenuOption("START", (400, 450), function=self.start)
+        option_start = MenuOption("START", (380, 450), function=self.start)
         self.options.append(option_start)
 
     def start(self):
         """
         Creates the player data and starts the game
         """
-        # TODO: Figure out why the controls aren't being set right
-
         # Player 1
         joystick = None
         if 'JOYSTICK' in self.__control_bars[0].get():
