@@ -195,8 +195,7 @@ class CustomizationMenu(Menu):
 
         self.__joysticks = []
 
-        # TODO: Add more colors
-        self.__colors = [(0, 255, 0), (255, 0, 0), (0, 0, 255), (255, 255, 0)]
+        self.__colors = [(0, 255, 0), (255, 0, 0), (0, 0, 255), (255, 255, 0), (255, 165, 0), (128, 0, 128), (255, 20, 147)]
         self.__color_surfaces = {}
         self.__controls = ['ARROW_KEYS', 'WASD']
         self.__control_surfaces = {}
@@ -264,7 +263,7 @@ class CustomizationMenu(Menu):
         joystick = None
         if 'JOYSTICK' in self.__control_bars[0].get():
             joystick = self.__joysticks[int(self.__control_bars[0].get()[-1])]
-        player1 = Player((100, 100), self.__color_bars[0].get(), direction=RIGHT, controls=self.__control_bars[0].get(), joystick=joystick)
+        player1 = Player("Player 1", (100, 100), self.__color_bars[0].get(), direction=RIGHT, controls=self.__control_bars[0].get(), joystick=joystick)
         self.__players.append(player1)
 
         # Player 2
@@ -272,7 +271,7 @@ class CustomizationMenu(Menu):
             joystick = None
             if 'JOYSTICK' in self.__control_bars[1].get():
                 joystick = self.__joysticks[int(self.__control_bars[1].get()[-1])]
-            player2 = Player((self.surface.get_width() - 100, 100), self.__color_bars[1].get(), direction=DOWN, controls=self.__control_bars[1].get(), joystick=joystick)
+            player2 = Player("Player 2", (self.surface.get_width() - 100, 100), self.__color_bars[1].get(), direction=DOWN, controls=self.__control_bars[1].get(), joystick=joystick)
             self.__players.append(player2)
 
         # Player 3
@@ -280,7 +279,7 @@ class CustomizationMenu(Menu):
             joystick = None
             if 'JOYSTICK' in self.__control_bars[2].get():
                 joystick = self.__joysticks[int(self.__control_bars[2].get()[-1])]
-            player3 = Player((100, self.surface.get_width() - 100), self.__color_bars[2].get(), direction=UP, controls=self.__control_bars[2].get(), joystick=joystick)
+            player3 = Player("Player 3", (100, self.surface.get_width() - 100), self.__color_bars[2].get(), direction=UP, controls=self.__control_bars[2].get(), joystick=joystick)
             self.__players.append(player3)
 
         # Player 4
@@ -288,7 +287,7 @@ class CustomizationMenu(Menu):
             joystick = None
             if 'JOYSTICK' in self.__control_bars[3].get():
                 joystick = self.__joysticks[int(self.__control_bars[3].get()[-1])]
-            player4 = Player((self.surface.get_width() - 100, self.surface.get_width() - 100), self.__color_bars[3].get(), direction=LEFT, controls=self.__control_bars[3].get(), joystick=joystick)
+            player4 = Player("Player 4", (self.surface.get_width() - 100, self.surface.get_width() - 100), self.__color_bars[3].get(), direction=LEFT, controls=self.__control_bars[3].get(), joystick=joystick)
             self.__players.append(player4)
 
         # Start the game

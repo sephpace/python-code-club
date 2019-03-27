@@ -28,8 +28,8 @@ class GUI:
         except TypeError:
             objects.draw(self.__screen)
 
-    def game_over(self, winning_color, game_mode):
-        """Displays the game over screen then goes badk to the title"""
+    def game_over(self, winning_player_name, winning_color, game_mode):
+        """Displays the game over screen then goes back to the title"""
         self.clear()
 
         font = pygame.font.SysFont('Verdana', 50)
@@ -38,17 +38,8 @@ class GUI:
             text_width, text_height = font.size('GAME OVER')
             pygame.Surface.blit(self.__screen, game_over_text, ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50))
         elif game_mode == 'multiplayer':
-            color_string = ''
-            if winning_color == (255, 0, 0):
-                color_string = 'RED'
-            elif winning_color == (0, 255, 0):
-                color_string = 'GREEN'
-            elif winning_color == (0, 0, 255):
-                color_string = 'BLUE'
-            elif winning_color == (255, 255, 0):
-                color_string = 'YELLOW'
-            game_over_text = font.render(f'{color_string} WINS', False, winning_color)
-            text_width, text_height = font.size(f'{color_string} WINS')
+            game_over_text = font.render(f'{winning_player_name} WINS', False, winning_color)
+            text_width, text_height = font.size(f'{winning_player_name} WINS')
             pygame.Surface.blit(self.__screen, game_over_text, ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50))
         self.update()
 

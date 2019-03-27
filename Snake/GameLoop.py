@@ -135,13 +135,13 @@ class GameLoop:
             # Check for singleplayer game over
             if self.__game_mode == 'singleplayer':
                 if len(self.__players) == 0:
-                    self.__gui.game_over((255, 255, 255), self.__game_mode)
+                    self.__gui.game_over(None, (255, 255, 255), self.__game_mode)
                     running = False
 
             # Check for a winner
             if self.__game_mode == 'multiplayer':
                 if len(self.__players) == 1:
-                    self.__gui.game_over(self.__players[0].get_color(), self.__game_mode)
+                    self.__gui.game_over(self.__players[0].get_name(), self.__players[0].get_color(), self.__game_mode)
                     running = False
     
     def get_rand_pos(self):

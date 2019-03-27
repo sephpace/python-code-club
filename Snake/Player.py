@@ -1,5 +1,5 @@
 
-from pygame import quit, draw, K_UP, K_LEFT, K_DOWN, K_RIGHT, K_w, K_a, K_s, K_d
+from pygame import draw, K_UP, K_LEFT, K_DOWN, K_RIGHT, K_w, K_a, K_s, K_d
 
 
 UP = 0
@@ -12,6 +12,7 @@ class Player:
     """A snake controlled by a player"""
 
     # Member variables
+    __name = None
     __body_positions = []  # A list of tuples containing x and y coordinates of each segment of the snake
     __color = ()           # The color of the snake
     __size = 0             # The size of each segment in the snake
@@ -23,8 +24,10 @@ class Player:
     down_button = None
     right_button = None
 
-    def __init__(self, start_pos, color, size=10, direction=UP, controls='ARROW_KEYS', joystick=None):
+    def __init__(self, name, start_pos, color, size=10, direction=UP, controls='ARROW_KEYS', joystick=None):
         """Constructor"""
+        self.__name = name
+
         if direction == UP:
             self.__body_positions = [start_pos,
                                     (start_pos[0], start_pos[1] + size),
@@ -98,6 +101,10 @@ class Player:
     def get_joystick(self):
         """Returns the pygame joystick object associated with this player and None if there are no joysticks associated with this player"""
         return self.__joystick
+
+    def get_name(self):
+        """Returns the name of the player"""
+        return self.__name
 
     def get_size(self):
         """Returns the size of the snake"""
