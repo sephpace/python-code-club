@@ -5,6 +5,8 @@ import random
 from Food import Food
 from Border import Border
 
+from ScoreBar import ScoreBar
+
 
 SCREEN_SIZE = 500
 GRID_SIZE = 10
@@ -13,8 +15,6 @@ UP = 0
 LEFT = 1
 DOWN = 2
 RIGHT = 3
-
-# TODO: Add scoreboard back for single player
 
 
 class GameLoop:
@@ -25,9 +25,10 @@ class GameLoop:
     __clock = None      # The game clock used to set the fps of the game
     __joysticks = None  # A list of all the joysticks currently connected to the computer
     __players = None    # A list of all the players
-    __game_mode = None
+    __game_mode = None  # The current game mode
     __foods = None      # A list of food objects
     __border = None     # The border object
+    __score_bar = None  # The score bar object
 
     def __init__(self, gui, players, game_mode):
         """Constructor"""
@@ -38,6 +39,7 @@ class GameLoop:
         self.__foods = [Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos()),
                         Food(self.get_rand_pos())]
         self.__border = Border(SCREEN_SIZE, GRID_SIZE)
+        self.__score_bar = ScoreBar()
         pygame.joystick.init()
 
     def run(self):
@@ -119,12 +121,17 @@ class GameLoop:
                             # Add a new body segment to the snake
                             player.add_segment()
 
+                            # Update the score
+                            self.__score_bar.increment()
+
                     # Draw each player
                     self.__gui.draw(player)
 
             # Draw all of the game objects
             self.__gui.draw(self.__foods)
             self.__gui.draw(self.__border)
+            if self.__game_mode == 'singleplayer':
+                self.__gui.draw(self.__score_bar)
 
             # Update the screen
             self.__gui.update()

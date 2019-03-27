@@ -76,4 +76,3 @@ class GUI:
     def update(self):
         """Updates the display"""
         pygame.display.update()
-
