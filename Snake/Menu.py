@@ -1,6 +1,7 @@
 
 import pygame
 from Player import Player
+from GameLoop import GameLoop
 
 
 UP = 0
@@ -13,11 +14,12 @@ class Menu:
     """
     Basic menu class.
     """
+    gui = None
     surface = None
     options = None
     running = True
 
-    def __init__(self, surface):
+    def __init__(self, gui, surface):
         """
         Constructor.
 
@@ -25,6 +27,7 @@ class Menu:
         """
         pygame.init()
 
+        self.gui = gui
         self.surface = surface
         self.surface.fill((0, 0, 0))
         pygame.display.update()
@@ -67,16 +70,14 @@ class MainMenu(Menu):
     """
     The main menu that pops up when the game is first launched and in between rounds
     """
-    __players = []
-    __game_mode = None
 
-    def __init__(self, surface):
+    def __init__(self, gui, surface):
         """
         Constructor.
 
         :param surface:  The surface to display the menu on
         """
-        super(MainMenu, self).__init__(surface)
+        super(MainMenu, self).__init__(gui, surface)
 
         # Draw the title
         pygame.font.init()
@@ -100,41 +101,31 @@ class MainMenu(Menu):
         """
         Logic for when the singleplayer option is selected.
         """
-        self.__players.append(Player((self.surface.get_width() / 2, self.surface.get_height() / 2), (0, 255, 0), direction=UP, controls='ARROW_KEYS'))
-        self.__game_mode = 'singleplayer'
-        self.running = False
+        customization_menu = CustomizationMenu(self.gui, self.surface, 1)
+        customization_menu.handle()
+
+        # Reset surface (only runs when the user hits 'back' on the following menu
+        self.surface.fill((0, 0, 0))
+        self.__init__(self.gui, self.surface)
 
     def multiplayer(self):
         """
         Logic for when the multiplayer option is selected.
         """
-        multiplayer_menu = MultiplayerMenu(self.surface)
+        multiplayer_menu = MultiplayerMenu(self.gui, self.surface)
         multiplayer_menu.handle()
-        self.__players = multiplayer_menu.get_players()
-        self.__game_mode = 'multiplayer'
-        self.running = False
 
-    def get_players(self):
-        """
-        :return:  The player data for each player as selected by the user
-        """
-        return self.__players
-
-    def get_game_mode(self):
-        """
-        :return:  The game mode selected by the user
-        """
-        return self.__game_mode
+        # Reset surface (only runs when the user hits 'back' on the following menu
+        self.surface.fill((0, 0, 0))
+        self.__init__(self.gui, self.surface)
 
 
 class MultiplayerMenu(Menu):
     """
     The menu that allows selection of the amount of players in the game
     """
-    __players = []
-
-    def __init__(self, surface):
-        super(MultiplayerMenu, self).__init__(surface)
+    def __init__(self, gui, surface):
+        super(MultiplayerMenu, self).__init__(gui, surface)
 
         # Two players
         option_twoplayer = MenuOption("2 PLAYER", function=self.twoplayer)
@@ -154,6 +145,10 @@ class MultiplayerMenu(Menu):
         option_fourplayer.set_pos(((self.surface.get_width() // 2) - (width // 2), 275))
         self.options.append(option_fourplayer)
 
+        # Add the back option
+        option_back = MenuOption("BACK", (10, 450), function=self.back)
+        self.options.append(option_back)
+
     def twoplayer(self):
         self.start_customization_menu(2)
 
@@ -164,16 +159,18 @@ class MultiplayerMenu(Menu):
         self.start_customization_menu(4)
 
     def start_customization_menu(self, player_amt):
-        customization_menu = CustomizationMenu(self.surface, player_amt)
+        customization_menu = CustomizationMenu(self.gui, self.surface, player_amt)
         customization_menu.handle()
-        self.__players = customization_menu.get_players()
-        self.running = False
 
-    def get_players(self):
+        # Reset surface (only runs when the user hits 'back' on the following menu
+        self.surface.fill((0, 0, 0))
+        self.__init__(self.gui, self.surface)
+
+    def back(self):
         """
-        :return:  The player data for each player as selected by the user
+        Displays the previous menu.
         """
-        return self.__players
+        self.running = False
 
 
 class CustomizationMenu(Menu):
@@ -182,23 +179,30 @@ class CustomizationMenu(Menu):
     """
     __players = None
     __player_count = None
+    __joysticks = None
+    __colors = None
+    __color_surfaces = None
+    __controls = None
+    __control_surfaces = None
+    __color_bars = None
+    __control_bars = None
 
-    __joysticks = []
-
-    # TODO: Add more colors
-    __colors = [(0, 255, 0), (255, 0, 0), (0, 0, 255), (255, 255, 0)]
-    __color_surfaces = {}
-    __controls = ['ARROW_KEYS', 'WASD']
-    __control_surfaces = {}
-
-    __color_bars = []
-    __control_bars = []
-
-    def __init__(self, surface, player_count):
-        super(CustomizationMenu, self).__init__(surface)
+    def __init__(self, gui, surface, player_count):
+        super(CustomizationMenu, self).__init__(gui, surface)
 
         self.__players = []
         self.__player_count = player_count
+
+        self.__joysticks = []
+
+        # TODO: Add more colors
+        self.__colors = [(0, 255, 0), (255, 0, 0), (0, 0, 255), (255, 255, 0)]
+        self.__color_surfaces = {}
+        self.__controls = ['ARROW_KEYS', 'WASD']
+        self.__control_surfaces = {}
+
+        self.__color_bars = []
+        self.__control_bars = []
 
         # Populate color_surfaces
         for color in self.__colors:
@@ -248,6 +252,10 @@ class CustomizationMenu(Menu):
         option_start = MenuOption("START", (380, 450), function=self.start)
         self.options.append(option_start)
 
+        # Add the back option
+        option_back = MenuOption("BACK", (10, 450), function=self.back)
+        self.options.append(option_back)
+
     def start(self):
         """
         Creates the player data and starts the game
@@ -284,13 +292,33 @@ class CustomizationMenu(Menu):
             self.__players.append(player4)
 
         # Start the game
-        self.running = False
+        if self.__player_count > 1:
+            game_mode = 'multiplayer'
+        else:
+            game_mode = 'singleplayer'
+        game_loop = GameLoop(self.gui, self.__players, game_mode)
+        game_loop.run()
 
-    def get_players(self):
+        # Reset surface (only runs when the user game has ended)
+        self.surface.fill((0, 0, 0))
+
+        # Redraw player names
+        font = pygame.font.SysFont('Verdana', 40)
+        for i in range(self.__player_count):
+            width, height = font.size(f'Player {i + 1}')
+            player_name = font.render(f'Player {i + 1}', False, (255, 255, 255))
+            draw_x = 10
+            draw_y = (self.surface.get_height() // 2) - (height * self.__player_count) + (height * i) + 50
+            pygame.Surface.blit(self.surface, player_name, (draw_x, draw_y))
+
+        # Reset player list
+        self.__players = []
+
+    def back(self):
         """
-        :return:  The players selected by the menu
+        Displays the previous menu.
         """
-        return self.__players
+        self.running = False
 
 
 class MenuOption:

@@ -2,7 +2,6 @@
 import pygame
 import random
 
-from GUI import GUI
 from Food import Food
 from Border import Border
 
@@ -26,28 +25,22 @@ class GameLoop:
     __clock = None      # The game clock used to set the fps of the game
     __joysticks = None  # A list of all the joysticks currently connected to the computer
     __players = None    # A list of all the players
+    __game_mode = None
     __foods = None      # A list of food objects
     __border = None     # The border object
 
-    def __init__(self):
+    def __init__(self, gui, players, game_mode):
         """Constructor"""
-        self.__gui = GUI(SCREEN_SIZE)
+        self.__gui = gui
         self.__clock = pygame.time.Clock()
+        self.__players = players
+        self.__game_mode = game_mode
+        self.__foods = [Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos()),
+                        Food(self.get_rand_pos())]
+        self.__border = Border(SCREEN_SIZE, GRID_SIZE)
         pygame.joystick.init()
 
-    def setup(self):
-        """Setup everything in the game to get it ready to start"""
-        self.__foods = [Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos())]
-        self.__border = Border(SCREEN_SIZE, GRID_SIZE)
-
-    def start(self):
-        """Start the game loop"""
-        while True:
-            self.setup()
-            self.__players, game_mode = self.__gui.show_menu()  # Run the menu first
-            self.run(game_mode)
-
-    def run(self, game_mode):
+    def run(self):
         """Run the logic of the loop"""
         running = True
         while running:
@@ -140,15 +133,15 @@ class GameLoop:
             self.__clock.tick(10)
 
             # Check for singleplayer game over
-            if game_mode == 'singleplayer':
+            if self.__game_mode == 'singleplayer':
                 if len(self.__players) == 0:
-                    self.__gui.game_over((255, 255, 255), game_mode)
+                    self.__gui.game_over((255, 255, 255), self.__game_mode)
                     running = False
 
             # Check for a winner
-            if game_mode == 'multiplayer':
+            if self.__game_mode == 'multiplayer':
                 if len(self.__players) == 1:
-                    self.__gui.game_over(self.__players[0].get_color(), game_mode)
+                    self.__gui.game_over(self.__players[0].get_color(), self.__game_mode)
                     running = False
     
     def get_rand_pos(self):

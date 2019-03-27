@@ -75,7 +75,7 @@ class GUI:
     def show_menu(self):
         """Displays the game title and menu"""
         # Start the menu(s)
-        menu = MainMenu(self.__screen)
+        menu = MainMenu(self, self.__screen)
         menu.handle()
 
         # Clear the menu from the screen
