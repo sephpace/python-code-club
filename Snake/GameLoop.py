@@ -44,6 +44,7 @@ class GameLoop:
 
     def run(self):
         """Run the logic of the loop"""
+        do_count_down = True
         running = True
         while running:
             # Clear the screen
@@ -150,6 +151,11 @@ class GameLoop:
                 if len(self.__players) == 1:
                     self.__gui.game_over(self.__players[0].get_name(), self.__players[0].get_color(), self.__game_mode)
                     running = False
+
+            # Do the countdown at the beginning of the round
+            if do_count_down:
+                self.__gui.count_down()
+                do_count_down = False
     
     def get_rand_pos(self):
         return random.randint(2, SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE, random.randint(2,SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE

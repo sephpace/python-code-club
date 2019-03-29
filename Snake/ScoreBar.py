@@ -4,6 +4,8 @@ from pygame import font, Surface
 class ScoreBar:
     """A bar that displays the score at the top of the screen"""
 
+    # TODO: Add a viewable high-score
+
     # Member variables
     __score = 0              # The score to be displayed
     __font = None            # The font that the score is displayed with

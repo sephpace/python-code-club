@@ -6,6 +6,8 @@ from Menu import MainMenu
 class GUI:
     """Handles all of the graphical elements of the game"""
 
+    # TODO: Add a count-down before the game starts
+
     # Member variables
     __screen = None  # The Pygame display window
 
@@ -27,6 +29,41 @@ class GUI:
                 obj.draw(self.__screen)
         except TypeError:
             objects.draw(self.__screen)
+
+    def count_down(self, time=3):
+        """Counts down from the given number to start the game"""
+
+        font = pygame.font.SysFont('Verdana', 40)
+
+        milliseconds = (time + 1) * 1000  # The amt of milliseconds left on the count down
+
+        # Handle quit event and delay for a little bit
+        while True:
+            # Event handler
+            for event in pygame.event.get():
+                # Quit event
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+
+            milliseconds -= pygame.time.delay(1)
+
+            # TODO: Finish the following code to make the timer count down properly
+
+            if milliseconds >= 1000:
+                number = font.render(str(milliseconds // 1000), False, (255, 255, 255))
+            elif 700 < milliseconds < 1000:
+                number = font.render('Start!', False, (255, 255, 255))
+            else:
+                break
+
+            pygame.draw.rect(self.__screen, (0, 0, 0), ((self.__screen.get_width() // 2) - (number.get_width() // 2), (self.__screen.get_height() // 2) - (number.get_height() // 2), number.get_width(), number.get_height()))
+            pygame.Surface.blit(self.__screen, number, ((self.__screen.get_width() // 2) - (number.get_width() // 2), (self.__screen.get_height() // 2) - (number.get_height() // 2)))
+            self.update()
+
+
+        # Update the screen
+        self.update()
 
     def game_over(self, winning_player_name, winning_color, game_mode):
         """Displays the game over screen then goes back to the title"""
