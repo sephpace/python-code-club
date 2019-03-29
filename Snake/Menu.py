@@ -263,7 +263,10 @@ class CustomizationMenu(Menu):
         joystick = None
         if 'JOYSTICK' in self.__control_bars[0].get():
             joystick = self.__joysticks[int(self.__control_bars[0].get()[-1])]
-        player1 = Player("Player 1", (100, 100), self.__color_bars[0].get(), direction=RIGHT, controls=self.__control_bars[0].get(), joystick=joystick)
+        if self.__player_count > 1:
+            player1 = Player("Player 1", (100, 100), self.__color_bars[0].get(), direction=RIGHT, controls=self.__control_bars[0].get(), joystick=joystick)
+        else:
+            player1 = Player("Player 1", (self.surface.get_width() // 2, 400), self.__color_bars[0].get(), direction=UP, controls=self.__control_bars[0].get(), joystick=joystick)
         self.__players.append(player1)
 
         # Player 2

@@ -8,6 +8,8 @@ from Border import Border
 from ScoreBar import ScoreBar
 
 
+#TODO: Clean up all the code and make it look nicer
+
 SCREEN_SIZE = 500
 GRID_SIZE = 10
 

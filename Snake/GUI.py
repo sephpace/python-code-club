@@ -5,9 +5,6 @@ from Menu import MainMenu
 
 class GUI:
     """Handles all of the graphical elements of the game"""
-
-    # TODO: Add a count-down before the game starts
-
     # Member variables
     __screen = None  # The Pygame display window
 
@@ -47,8 +44,6 @@ class GUI:
                     exit()
 
             milliseconds -= pygame.time.delay(1)
-
-            # TODO: Finish the following code to make the timer count down properly
 
             if milliseconds >= 1000:
                 number = font.render(str(milliseconds // 1000), False, (255, 255, 255))
