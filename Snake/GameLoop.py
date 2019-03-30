@@ -47,12 +47,16 @@ class GameLoop:
         self.__clock = pygame.time.Clock()
         self.__players = players
         self.__game_mode = game_mode
-        self.__foods = [Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos()),
-                        Food(self.get_rand_pos())]
+        self.__foods = []
         self.__border = Border(SCREEN_SIZE, GRID_SIZE)
         self.__score_bar = ScoreBar((15, 10))
         self.__high_score_bar = HighScoreBar((125, 10))
         pygame.joystick.init()
+
+        # NOTE: --- Change the amount of food that is on the screen here (max is 2000) ---
+        food_amt = 4
+        for i in range(food_amt):
+            self.__foods.append(Food(self.get_rand_pos()))
 
     def run(self):
         """
@@ -155,6 +159,7 @@ class GameLoop:
             # Update the screen
             self.__gui.update()
 
+            # NOTE: --- Change the speed of the snakes here (frames per second) ---
             # Set the speed of each frame
             self.__clock.tick(10)
 
@@ -183,4 +188,4 @@ class GameLoop:
 
         :return:  A tuple containing an xy position on the screen
         """
-        return random.randint(2, SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE, random.randint(2, SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE
+        return random.randint(1, SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE, random.randint(1, SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE

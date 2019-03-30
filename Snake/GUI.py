@@ -83,9 +83,6 @@ class GUI:
         :param winning_color:        The color of the player who won the game
         :param game_mode:            The game mode of that game that is being ended
         """
-        # Clear the screen
-        self.clear()
-
         # Create the font object
         font = pygame.font.SysFont('Verdana', 50)
 
@@ -93,10 +90,12 @@ class GUI:
         if game_mode == 'singleplayer':
             game_over_text = font.render('GAME OVER', False, winning_color)
             text_width, text_height = font.size('GAME OVER')
+            pygame.draw.rect(self.__screen, (0, 0, 0), ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50, text_width, text_height))
             pygame.Surface.blit(self.__screen, game_over_text, ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50))
         elif game_mode == 'multiplayer':
             game_over_text = font.render(f'{winning_player_name} WINS', False, winning_color)
             text_width, text_height = font.size(f'{winning_player_name} WINS')
+            pygame.draw.rect(self.__screen, (0, 0, 0), ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50, text_width, text_height))
             pygame.Surface.blit(self.__screen, game_over_text, ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50))
 
         # Update the screen
