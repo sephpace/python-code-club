@@ -26,6 +26,7 @@ class Border:
         self.__screen_size = screen_size
         self.__cell_size = cell_size
         self.__color = color
+        self.__square_positions = []
 
         # Setup the border
         for i in range(0, screen_size, cell_size):

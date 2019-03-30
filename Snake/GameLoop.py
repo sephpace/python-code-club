@@ -5,7 +5,7 @@ import random
 from Food import Food
 from Border import Border
 
-from ScoreBar import ScoreBar
+from ScoreBar import ScoreBar, HighScoreBar
 
 
 # Global constants
@@ -50,7 +50,8 @@ class GameLoop:
         self.__foods = [Food(self.get_rand_pos()), Food(self.get_rand_pos()), Food(self.get_rand_pos()),
                         Food(self.get_rand_pos())]
         self.__border = Border(SCREEN_SIZE, GRID_SIZE)
-        self.__score_bar = ScoreBar()
+        self.__score_bar = ScoreBar((15, 10))
+        self.__high_score_bar = HighScoreBar((125, 10))
         pygame.joystick.init()
 
     def run(self):
@@ -139,6 +140,7 @@ class GameLoop:
 
                             # Update the score
                             self.__score_bar.increment()
+                            self.__high_score_bar.update(self.__score_bar.get_score())
 
                     # Draw each player
                     self.__gui.draw(player)
@@ -148,6 +150,7 @@ class GameLoop:
             self.__gui.draw(self.__border)
             if self.__game_mode == 'singleplayer':
                 self.__gui.draw(self.__score_bar)
+                self.__gui.draw(self.__high_score_bar)
 
             # Update the screen
             self.__gui.update()
@@ -158,6 +161,7 @@ class GameLoop:
             # Check for a singleplayer game over
             if self.__game_mode == 'singleplayer':
                 if len(self.__players) == 0:
+                    self.__high_score_bar.save()
                     self.__gui.game_over(None, (255, 255, 255), self.__game_mode)
                     running = False
 
