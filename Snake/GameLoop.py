@@ -8,8 +8,7 @@ from Border import Border
 from ScoreBar import ScoreBar
 
 
-#TODO: Clean up all the code and make it look nicer
-
+# Global constants
 SCREEN_SIZE = 500
 GRID_SIZE = 10
 
@@ -20,20 +19,30 @@ RIGHT = 3
 
 
 class GameLoop:
-    """The main loop of the game.  Calculates all of the non-visual logic"""
+    """
+    The main loop of the game.
+
+    Calculates all of the non-visual logic during game play.
+    """
 
     # Member variables
     __gui = None        # The game's Graphical User Interface
     __clock = None      # The game clock used to set the fps of the game
     __joysticks = None  # A list of all the joysticks currently connected to the computer
-    __players = None    # A list of all the players
-    __game_mode = None  # The current game mode
+    __players = None    # A list of the players currently playing in the round
+    __game_mode = None  # The current game mode (either 'singleplayer' or 'multiplayer')
     __foods = None      # A list of food objects
     __border = None     # The border object
     __score_bar = None  # The score bar object
 
     def __init__(self, gui, players, game_mode):
-        """Constructor"""
+        """
+        Constructor.
+
+        :param gui:        The game's Graphical User Interface
+        :param players:    A list of the players currently playing in the round
+        :param game_mode:  The current game mode (either 'singleplayer' or 'multiplayer')
+        """
         self.__gui = gui
         self.__clock = pygame.time.Clock()
         self.__players = players
@@ -45,7 +54,9 @@ class GameLoop:
         pygame.joystick.init()
 
     def run(self):
-        """Run the logic of the loop"""
+        """
+        Run the logic of the loop.
+        """
         do_count_down = True
         running = True
         while running:
@@ -72,6 +83,7 @@ class GameLoop:
                                 if player.get_direction() != LEFT:
                                     player.set_direction(RIGHT)
 
+                # Joystick events
                 if event.type == pygame.JOYHATMOTION:
                     for player in self.__players:
                         if player.is_alive():
@@ -96,6 +108,7 @@ class GameLoop:
                     pygame.quit()
                     exit()
 
+            # Player mechanics
             for player in self.__players:
                 if player.is_alive():
                     # Move the snake
@@ -142,7 +155,7 @@ class GameLoop:
             # Set the speed of each frame
             self.__clock.tick(10)
 
-            # Check for singleplayer game over
+            # Check for a singleplayer game over
             if self.__game_mode == 'singleplayer':
                 if len(self.__players) == 0:
                     self.__gui.game_over(None, (255, 255, 255), self.__game_mode)
@@ -158,6 +171,12 @@ class GameLoop:
             if do_count_down:
                 self.__gui.count_down()
                 do_count_down = False
-    
-    def get_rand_pos(self):
-        return random.randint(2, SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE, random.randint(2,SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE
+
+    @staticmethod
+    def get_rand_pos():
+        """
+        Returns a random position on the screen that isi within the bounds of the play area.
+
+        :return:  A tuple containing an xy position on the screen
+        """
+        return random.randint(2, SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE, random.randint(2, SCREEN_SIZE // GRID_SIZE - 2) * GRID_SIZE

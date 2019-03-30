@@ -4,23 +4,35 @@ from Menu import MainMenu
 
 
 class GUI:
-    """Handles all of the graphical elements of the game"""
+    """
+    Handles all of the graphical elements of the game.
+    """
     # Member variables
     __screen = None  # The Pygame display window
 
     def __init__(self, size):
-        """Constructor"""
+        """
+        Constructor.
+
+        :param size:  The size of both sides of the screen
+        """
         # Setup the screen
         pygame.init()
         pygame.font.init()
         self.__screen = pygame.display.set_mode((size, size))
 
     def clear(self):
-        """Sets the screen's color to black"""
+        """
+        Clears everything from teh screen and sets the color to black.
+        """
         self.__screen.fill((0, 0, 0))
 
     def draw(self, objects):
-        """Draws all of the given objects to the screen"""
+        """
+        Draws all of the given objects onto the screen.
+
+        :param objects:  The objects to draw onto the screen.  Can be a single object or a list of objects
+        """
         try:
             for obj in objects:
                 obj.draw(self.__screen)
@@ -28,7 +40,11 @@ class GUI:
             objects.draw(self.__screen)
 
     def count_down(self, time=3):
-        """Counts down from the given number to start the game"""
+        """
+        Shows a count down timer for the given amount of seconds.
+
+        :param time:  The amount of time to count down from in seconds
+        """
 
         font = pygame.font.SysFont('Verdana', 40)
 
@@ -56,15 +72,24 @@ class GUI:
             pygame.Surface.blit(self.__screen, number, ((self.__screen.get_width() // 2) - (number.get_width() // 2), (self.__screen.get_height() // 2) - (number.get_height() // 2)))
             self.update()
 
-
         # Update the screen
         self.update()
 
     def game_over(self, winning_player_name, winning_color, game_mode):
-        """Displays the game over screen then goes back to the title"""
+        """
+        Displays the game over screen.
+
+        :param winning_player_name:  The name of the player who won the game
+        :param winning_color:        The color of the player who won the game
+        :param game_mode:            The game mode of that game that is being ended
+        """
+        # Clear the screen
         self.clear()
 
+        # Create the font object
         font = pygame.font.SysFont('Verdana', 50)
+
+        # Figure out the game mode and display the game over message
         if game_mode == 'singleplayer':
             game_over_text = font.render('GAME OVER', False, winning_color)
             text_width, text_height = font.size('GAME OVER')
@@ -73,11 +98,13 @@ class GUI:
             game_over_text = font.render(f'{winning_player_name} WINS', False, winning_color)
             text_width, text_height = font.size(f'{winning_player_name} WINS')
             pygame.Surface.blit(self.__screen, game_over_text, ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50))
+
+        # Update the screen
         self.update()
 
+        # Delay the screen for about 2 seconds
         milliseconds = 0  # The amt of milliseconds delayed
 
-        # Handle quit event and delay for a little bit
         while True:
             # Event handler
             for event in pygame.event.get():
@@ -86,25 +113,32 @@ class GUI:
                     pygame.quit()
                     exit()
 
+            # Increase the amount of milliseconds passed
             milliseconds += pygame.time.delay(1)
 
+            # Stop delaying it once the desired value is reached
             if milliseconds >= 2000:
                 break
 
-        # Clear the screen
+        # Clear and update the screen
         self.clear()
         self.update()
 
     def show_menu(self):
-        """Displays the game title and menu"""
+        """
+        Displays the game title and menu.
+        """
         # Start the menu(s)
         menu = MainMenu(self, self.__screen)
         menu.handle()
 
-        # Clear the menu from the screen
+        # Clear the menu from the screen and update it
         self.clear()
         self.update()
 
-    def update(self):
-        """Updates the display"""
+    @staticmethod
+    def update():
+        """
+        Updates the display.
+        """
         pygame.display.update()

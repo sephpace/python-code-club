@@ -1,6 +1,7 @@
 
 from pygame import font, Surface
 
+
 class ScoreBar:
     """A bar that displays the score at the top of the screen"""
 
@@ -13,26 +14,44 @@ class ScoreBar:
     __score_text = None      # The text object for the score
 
     def __init__(self, score=0):
-        """Constructor"""
+        """
+        Constructor.
+
+        :param score:  The score to be displayed
+        """
         self.__score = score
         self.__font = font.SysFont("Verdana", 20)
         self.__score_bar_text = self.__font.render("Score: ", False, (255, 255, 255))
         self.__score_text = self.__font.render(str(score), False, (255, 255, 255))
 
     def draw(self, surface):
-        """Draws the scorebar to the given surface"""
+        """
+        Draws the score bar to the given surface.
+
+        :param surface:  The surface to draw the score bar onto
+        """
         Surface.blit(surface, self.__score_bar_text, (15, 10))
         Surface.blit(surface, self.__score_text, (85, 10))
 
     def get_score(self):
-        """Returns the score"""
+        """
+        Returns the current score.
+
+        :return:  An int representing the current score
+        """
         return self.__score
 
     def increment(self):
-        """Adds 1 to the score"""
+        """
+        Adds 1 to the score.
+        """
         self.__score += 1
         self.set_score(self.__score)
 
     def set_score(self, new_score):
-        """Sets the score to the given value"""
+        """
+        Sets the score to the given value.
+
+        :param new_score:  The value to set the score to
+        """
         self.__score_text = self.__font.render(str(new_score), False, (255, 255, 255))
