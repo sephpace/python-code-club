@@ -25,6 +25,7 @@ class Player:
     __size = None            # The size of each segment in the player (default is 10)
     __direction = None       # The direction the player is moving
     __alive = None           # A boolean that determines if the player is alive or not
+    __turn = None            # A boolean that determines if the player can turn or not
     __joystick = None        # The joystick associated with this player (if any)
     up_button = None         # The button that makes the player turn upward
     left_button = None       # The button that makes the player turn leftward
@@ -60,6 +61,7 @@ class Player:
         self.__size = size
         self.__direction = direction
         self.__alive = True
+        self.__turn = True
 
         # Set up the joystick if there is one given
         if joystick is not None:
@@ -83,6 +85,14 @@ class Player:
         Adds a new segment to the end of the player.
         """
         self.__body_positions.append(self.__body_positions[-1])
+
+    def can_turn(self):
+        """
+        Returns True if the player can turn.
+
+        :return:  True if the player can turn and False otherwise
+        """
+        return self.__turn
 
     def is_alive(self):
         """
@@ -190,3 +200,11 @@ class Player:
         :param direction:  The new direction the player will move in
         """
         self.__direction = direction
+
+    def set_turning(self, can_turn):
+        """
+        Determines if a player can turn or not.
+
+        :param can_turn:  A boolean that is True if the player can turn and False otherwise
+        """
+        self.__turn = can_turn

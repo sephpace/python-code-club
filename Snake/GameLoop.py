@@ -74,39 +74,49 @@ class GameLoop:
                 if event.type == pygame.KEYDOWN:
                     for player in self.__players:
                         if player.is_alive():
-                            key = event.key
-                            if key == player.up_button:
-                                if player.get_direction() != DOWN:
-                                    player.set_direction(UP)
-                            if key == player.left_button:
-                                if player.get_direction() != RIGHT:
-                                    player.set_direction(LEFT)
-                            if key == player.down_button:
-                                if player.get_direction() != UP:
-                                    player.set_direction(DOWN)
-                            if key == player.right_button:
-                                if player.get_direction() != LEFT:
-                                    player.set_direction(RIGHT)
+                            if player.can_turn():
+                                key = event.key
+                                if key == player.up_button:
+                                    if player.get_direction() != DOWN:
+                                        player.set_direction(UP)
+                                        player.set_turning(False)
+                                elif key == player.left_button:
+                                    if player.get_direction() != RIGHT:
+                                        player.set_direction(LEFT)
+                                        player.set_turning(False)
+                                elif key == player.down_button:
+                                    if player.get_direction() != UP:
+                                        player.set_direction(DOWN)
+                                        player.set_turning(False)
+                                elif key == player.right_button:
+                                    if player.get_direction() != LEFT:
+                                        player.set_direction(RIGHT)
+                                        player.set_turning(False)
 
                 # Joystick events
                 if event.type == pygame.JOYHATMOTION:
                     for player in self.__players:
                         if player.is_alive():
-                            if player.get_joystick() is not None:
-                                if event.joy == player.get_joystick().get_id():
-                                    x_axis, y_axis = event.value
-                                    if y_axis == 1:
-                                        if player.get_direction() != DOWN:
-                                            player.set_direction(UP)
-                                    if x_axis == -1:
-                                        if player.get_direction() != RIGHT:
-                                            player.set_direction(LEFT)
-                                    if y_axis == -1:
-                                        if player.get_direction() != UP:
-                                            player.set_direction(DOWN)
-                                    if x_axis == 1:
-                                        if player.get_direction() != LEFT:
-                                            player.set_direction(RIGHT)
+                            if player.can_turn():
+                                if player.get_joystick() is not None:
+                                    if event.joy == player.get_joystick().get_id():
+                                        x_axis, y_axis = event.value
+                                        if y_axis == 1:
+                                            if player.get_direction() != DOWN:
+                                                player.set_direction(UP)
+                                                player.set_turning(False)
+                                        elif x_axis == -1:
+                                            if player.get_direction() != RIGHT:
+                                                player.set_direction(LEFT)
+                                                player.set_turning(False)
+                                        elif y_axis == -1:
+                                            if player.get_direction() != UP:
+                                                player.set_direction(DOWN)
+                                                player.set_turning(False)
+                                        elif x_axis == 1:
+                                            if player.get_direction() != LEFT:
+                                                player.set_direction(RIGHT)
+                                                player.set_turning(False)
 
                 # Quit event
                 if event.type == pygame.QUIT:
@@ -118,6 +128,9 @@ class GameLoop:
                 if player.is_alive():
                     # Move the snake
                     player.move()
+
+                    # Make it so the player can turn again
+                    player.set_turning(True)
 
                     # Check for collisions with self and border
                     if player.is_colliding(self.__border.get_positions() + player.get_body_positions()[1:]):
