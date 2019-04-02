@@ -1,8 +1,8 @@
 
-from GameLoop import GameLoop
+from GUI import GUI
 
 
+# Start the game
 if __name__ == "__main__":
-    """Start the game"""
-    game_loop = GameLoop()
-    game_loop.start()
+    gui = GUI(500)
+    gui.show_menu()
