@@ -236,7 +236,7 @@ class CustomizationMenu(Menu):
 
         self.__joysticks = []
 
-        self.__colors = [(0, 255, 0), (255, 0, 0), (0, 0, 255), (255, 255, 0), (255, 165, 0), (128, 0, 128), (255, 20, 147)]
+        self.__colors = [(0, 255, 0), (255, 0, 0), (0, 0, 255), (255, 255, 0), (255, 100, 0), (128, 0, 128), (255, 20, 147)]
         self.__color_surfaces = {}
         self.__controls = ['ARROW_KEYS', 'WASD']
         self.__control_surfaces = {}
