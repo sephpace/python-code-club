@@ -1,5 +1,6 @@
 
 import pygame
+import time
 from Menu import MainMenu
 
 
@@ -41,7 +42,7 @@ class GUI:
         except TypeError:
             objects.draw(self.__screen)
 
-    def count_down(self, time=3):
+    def count_down(self, seconds=3):
         """
         Shows a count down timer for the given amount of seconds.
 
@@ -50,7 +51,7 @@ class GUI:
 
         font = pygame.font.SysFont('Verdana', 40)
 
-        milliseconds = (time + 1) * 1000  # The amt of milliseconds left on the count down
+        stop_time = time.time() + seconds + 1
 
         # Handle quit event and delay for a little bit
         while True:
@@ -61,11 +62,11 @@ class GUI:
                     pygame.quit()
                     exit()
 
-            milliseconds -= pygame.time.delay(1)
+            seconds_left = stop_time - time.time()
 
-            if milliseconds >= 1000:
-                number = font.render(str(milliseconds // 1000), False, (255, 255, 255))
-            elif 700 < milliseconds < 1000:
+            if seconds_left >= 1:
+                number = font.render(str(int(seconds_left)), False, (255, 255, 255))
+            elif 0 < seconds_left < 1:
                 number = font.render('Start!', False, (255, 255, 255))
             else:
                 break
