@@ -262,15 +262,15 @@ class CustomizationMenu(Menu):
             font = pygame.font.SysFont('Verdana', 20)
             controller_number = font.render(str(joystick.get_id() + 1), False, (255, 255, 255))
             pygame.Surface.blit(controller_image, controller_number, (23, 3))
-            self.__control_surfaces[f'JOYSTICK{joystick.get_id()}'] = controller_image
-            self.__controls.append(f'JOYSTICK{joystick.get_id()}')
+            self.__control_surfaces['JOYSTICK' + str(joystick.get_id())] = controller_image
+            self.__controls.append('JOYSTICK' + str(joystick.get_id()))
 
         # Draw all of the objects onto the screen
         font = pygame.font.SysFont('Verdana', 40)
         for i in range(player_count):
             # Add the player name for each player
-            width, height = font.size(f'Player {i + 1}')
-            player_name = font.render(f'Player {i + 1}', False, (255, 255, 255))
+            width, height = font.size('Player ' + str(i + 1))
+            player_name = font.render('Player ' + str(i + 1), False, (255, 255, 255))
             draw_x = 10
             draw_y = (self.surface.get_height() // 2) - (height * player_count) + (height * i) + 50
             pygame.Surface.blit(self.surface, player_name, (draw_x, draw_y))
@@ -366,8 +366,8 @@ class CustomizationMenu(Menu):
         # Redraw player names
         font = pygame.font.SysFont('Verdana', 40)
         for i in range(self.__player_count):
-            width, height = font.size(f'Player {i + 1}')
-            player_name = font.render(f'Player {i + 1}', False, (255, 255, 255))
+            width, height = font.size('Player ' + str(i + 1))
+            player_name = font.render('Player ' + str(i + 1), False, (255, 255, 255))
             draw_x = 10
             draw_y = (self.surface.get_height() // 2) - (height * self.__player_count) + (height * i) + 50
             pygame.Surface.blit(self.surface, player_name, (draw_x, draw_y))

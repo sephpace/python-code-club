@@ -96,8 +96,8 @@ class GUI:
             pygame.draw.rect(self.__screen, (0, 0, 0), ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50, text_width, text_height))
             pygame.Surface.blit(self.__screen, game_over_text, ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50))
         elif game_mode == 'multiplayer':
-            game_over_text = font.render(f'{winning_player_name} WINS', False, winning_color)
-            text_width, text_height = font.size(f'{winning_player_name} WINS')
+            game_over_text = font.render(winning_player_name+ ' WINS', False, winning_color)
+            text_width, text_height = font.size(winning_player_name + ' WINS')
             pygame.draw.rect(self.__screen, (0, 0, 0), ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50, text_width, text_height))
             pygame.Surface.blit(self.__screen, game_over_text, ((self.__screen.get_width() // 2) - (text_width // 2), (self.__screen.get_height() // 2) - (text_height // 2) - 50))
 
