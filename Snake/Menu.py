@@ -42,9 +42,6 @@ class Menu:
         Display all of the options on the surface.
         """
         while self.running:
-            for option in self.options:
-                option.draw(self.surface)
-
             # Events
             for event in pygame.event.get():
                 # Mouse motion event
@@ -70,7 +67,8 @@ class Menu:
                     exit()
 
             # Update the screen
-            pygame.display.update()
+            for option in self.options:
+                option.draw(self.surface)
 
 
 class MainMenu(Menu):
@@ -92,6 +90,7 @@ class MainMenu(Menu):
         title = title_font.render('Snake', False, (0, 255, 0))
         width, height = title_font.size('Snake')
         pygame.Surface.blit(self.surface, title, ((self.surface.get_width() // 2) - (width // 2), 120))
+        pygame.display.update(((self.surface.get_width() // 2) - (width // 2), 120, title.get_width(), title.get_height()))
 
         # Set up the menu options
         option_singleplayer = MenuOption('Singleplayer', function=self.singleplayer)
@@ -274,6 +273,7 @@ class CustomizationMenu(Menu):
             draw_x = 10
             draw_y = (self.surface.get_height() // 2) - (height * player_count) + (height * i) + 50
             pygame.Surface.blit(self.surface, player_name, (draw_x, draw_y))
+            pygame.display.update((draw_x, draw_y, player_name.get_width(), player_name.get_height()))
 
             # Add the color bar for each player
             color_bar = ArrowBar((draw_x + width + 10, draw_y), self.__colors, self.__color_surfaces)
@@ -371,6 +371,7 @@ class CustomizationMenu(Menu):
             draw_x = 10
             draw_y = (self.surface.get_height() // 2) - (height * self.__player_count) + (height * i) + 50
             pygame.Surface.blit(self.surface, player_name, (draw_x, draw_y))
+            pygame.display.update((draw_x, draw_y, player_name.get_width(), player_name.get_height()))
 
         # Reset player list
         self.__players = []
@@ -426,6 +427,7 @@ class MenuOption:
         """
         x, y = self.__pos
         pygame.Surface.blit(surface, self.surface, (x, y))
+        pygame.display.update((x, y, self.surface.get_width(), self.surface.get_height()))
 
     def get_pos(self):
         """
@@ -589,6 +591,7 @@ class ArrowBar:
         y = self.__pos[1]
         pygame.draw.rect(surface, (0, 0, 0), (x, y, self.__surface.get_width(), self.__surface.get_height()))
         pygame.Surface.blit(surface, self.__surface, (x, y))
+        pygame.display.update((x, y, self.__surface.get_width(), self.__surface.get_height()))
 
     def get(self):
         """
